@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/easy.svg').default,
     description: (
       <>
         AirAccount and more infra was designed from the ground up to be easily registered and
@@ -14,18 +14,18 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Focus on UX',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Seamless Integration',
+    Svg: require('@site/static/img/integration.svg').default,
     description: (
       <>
-        SuperPaymaster and Cards system lets you focus on your transactions, and we&apos;ll do the chores. Go
-        ahead and move your transactions into the <code>Blockchain</code>.
+        Cos72 with SuperPaymaster and Cards system and more plugins lets you focus on your business and transactions, and we&apos;ll do the chores. Go
+        ahead and move your idea into the <code>Real DApps</code>.
       </>
     ),
   },
   {
     title: 'Open Source and DPT',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    Svg: require('@site/static/img/open.svg').default,
     description: (
       <>
         All the code is open source and transparent. You can find the code on 
