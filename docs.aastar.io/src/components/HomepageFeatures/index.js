@@ -8,7 +8,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        AirAccount was designed from the ground up to be easily registered and
+        AirAccount and more infra was designed from the ground up to be easily registered and
         used to get your Web3 account up and running quickly.
       </>
     ),
@@ -24,12 +24,12 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Open Source and Transparent',
+    title: 'Open Source and DPT',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
         All the code is open source and transparent. You can find the code on 
-        <a href="https://github.com/aastarcommunity">GitHub</a>.
+        <a href="https://github.com/aastarcommunity"> GitHub</a> All infra is aligned with DPT(<bold>Decentralized Permissionless and Trustless</bold>) principles.
       </>
     ),
   },

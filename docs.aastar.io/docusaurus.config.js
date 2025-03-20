@@ -11,7 +11,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'AAStar Docs',
-  tagline: 'Simple, secure, and cheap Web3 account for everyone',
+  tagline: 'Simple, secure, and cheap Web3 infra for your digital future',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
