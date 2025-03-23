@@ -2,6 +2,7 @@
 基础的研究思考逻辑。
 
 ## Research problem
+Original problem of your research in your industry
 社会问题：人性和自由-->时间空间和选择权-->定义新经济模型-->基于新技术创建-->创新协作关系（社区和分配）-->DApp-->依赖基建
 博士论文研究问题：
 Mass adoption的基建之一：一个安全易用低成本的区块链账户，是大规模应用基建的第一个障碍和难题。
