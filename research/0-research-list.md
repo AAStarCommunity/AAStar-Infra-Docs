@@ -1,7 +1,6 @@
-# Popular wallets investigation
-We will use and try all popular wallets to see if we can get some information about them.
-Specially on gas payment and security and total UX.
-
+# Research Question List
+本文收集所有需要研究的具体问题。
+related docs check collections: [doc-list.md](./0-doc-list.md)
 ## Overview
 ### 以太坊Gas Payment机制详尽调查分析
 
