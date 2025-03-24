@@ -9,7 +9,7 @@
 而我个人寄希望于区块链来帮助实现这个研究和探索，整体的研究兴趣，也是围绕我的核心方向：如何让普通个体获得自由。
 
 ## My Research Interests
-作为研究者/researcher，我致力于研究的领域很多，在区块链和去中心化计算等领域包括但不限于：
+作为研究者/researcher，持续关注的研究领域很多，包括但不限于：
 - 区块链账户和安全/Blockchain Account and Security
 - 区块链基础去中心化计算/Blockchain Basic Decentralized Computing
 - 人工智能在个体决策在区块链的应用/Artificial Intelligence
@@ -20,7 +20,7 @@
 
 ## My PhD Research
 作为一个博士生/PhD student，我的研究领域是：
-- 区块链账户和安全/Blockchain Account and Security
+- 区块链账户/Blockchain Account
 完成了一篇综述性质的会议论文：Blockchain Account：Credential Contral Balance.
 包括以下相关的子领域：
 
@@ -64,17 +64,22 @@ SocialRecovery和相关研究，解决社交恢复的安全性和隐私以及UX�
 
 ## My Articles
 - 区块链研究
-    - 个人部分放在个人Blog和一个丢失了的Mirror，更新不频繁
+    - 个人部分放在[个人Blog](https://blog.jlab.tech)和一个丢失了的Mirror，更新不频繁
     - 在DApp Learning和SeeDAO以及Plancker和AAStar，这些研究在相关的notion或者GitHub，开源开放
-    - 汇总了一份开源社区进行的研究副本：TODO
+    - 汇总了一份开源社区进行的研究副本：TODO,不过可以参考寄生在CMUBA免费notion的AAStar notion:[不完全版本](https://cmuba.notion.site/Research-list-f4e428658b5e4d309cf37be58ff02b7d),[其他文档](https://cmuba.notion.site/AAStar-Working-Docs-f077df7f2166492aa05ba75666d4f451)
 - 硕士论文
-    - 这里：
+    - 这里：[个体量化,Study on the Influence of Social Network Factors on Individuals’ Value](./papers/焦会峰学位论文定稿V1.4-3-9答辩通过提交版本.pdf)
+    - 傻X的CNKI，不开放硕博的论文访问，搞不明白，所以没有在线版本
+    - 微盘的在线版本：[社会关系网络因素对个体价值影响研究](https://share.weiyun.com/5gLNJjE)
 - 博士会议论文
-    - 这里：TODO
+    - 这里：[TICC-2024](./papers/Final-FullPaper-TICC2024_ICDI_CMU_Jiao_HuiFengV1.3.pdf)
+    - 中文版:[TICC-2024CN](./papers/TICC-机翻中文版-凭证控制余额-统一账户模型-焦会峰.pdf)
+    - Archix:[https://arxiv.org/abs/2402.10616](https://arxiv.org/abs/2402.10616)
+    - Online link:[TICC](https://ticc.ic.swu.ac.th/),[TICC Collection](https://ticc.ic.swu.ac.th/wp-content/uploads/2024/07/Proceedings_TICC_8th_V5_20240703.pdf)
 - 博士论文1
-    - 草稿title：
+    - 草稿：[jounal-1.md](./jounal-1.md)
 - 博士论文2
-    - 计划草稿：
+    - 计划草稿：[jounal-2.md](./jounal-2.md)
 - 更多论文：待定  
 
 ## Collection
