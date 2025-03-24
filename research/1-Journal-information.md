@@ -1,4 +1,5 @@
 # Journal information
+[0-doc-list.md](./0-doc-list.md)
 Name：
 Blockchain: Research and Applications
 

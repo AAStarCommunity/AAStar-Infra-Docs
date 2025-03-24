@@ -1,4 +1,5 @@
 # Thinking of Research
+[0-doc-list.md](./0-doc-list.md)
 基础的研究思考逻辑：
 1. research problem：现实世界或者研究领域面临的实际问题，有时候二者是交叉的。
 2. research question：从problem中提炼出的具体问题，是问题的显化，是”问“的形式。
