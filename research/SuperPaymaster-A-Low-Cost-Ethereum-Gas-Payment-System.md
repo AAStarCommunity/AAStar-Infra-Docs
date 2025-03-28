@@ -1,5 +1,4 @@
-# SuperPaymaster: A Low-Cost Ethereum Gas Payment System Based on ERC4337 and Account Abstraction
-
+# SuperPaymaster: A Decentralized Ethereum Gas Payment System Based on ERC4337 and Account Abstraction
 
 ## Highlights
 
