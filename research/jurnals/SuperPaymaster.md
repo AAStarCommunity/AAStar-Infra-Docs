@@ -12,6 +12,10 @@ This paper introduces SuperPaymaster, a novel blockchain transaction Gas payment
 
 Blockchain: Specifically refers to the Ethereum series of public blockchains with EVM and associated VMs as their core.
 
+Simple version：
+Substantial Gas fees and complex operational procedures currently impede the widespread adoption of blockchain transactions, hindering further technological advancement. To facilitate broader application within the cryptocurrency industry, this research introduces SuperPaymaster, a Gas payment system based on the ERC4337 account abstraction protocol and the SDSS (Standardized Decentralized Service System). This system aims to ensure cross-chain interoperability, significantly reduce Gas payment costs and operational complexity, and enhance user experience, effectively addressing challenges such as convoluted native token acquisition, unintuitive plugin utilization, cumbersome onboarding, and high cross-chain transfer costs. SuperPaymaster leverages ERC4337 for seamless cross-chain Gas payments, accepts community tokens as Gas currency to lower expenses, and employs SDSS to establish a decentralized and price-competitive Gas service ecosystem, thereby simplifying operations, reducing costs, and improving the overall user experience.
+
+
 ##  Introduction
 
 ### Background
@@ -59,3 +63,7 @@ The specific aspects of gas payment addressed in this research include:
 ### Brief Methodology
 
 To address the research questions, this study employs a design science research methodology. First, it introduces a novel SuperPaymaster system built upon ERC-4337, designed to provide a permissionless, stable, secure, and competitive gas payment service. Second, it proposes a new Standardized Decentralized Service System (SDSS) to establish a foundational service architecture that ensures secure, transparent, and user-friendly decentralized basic computing services. Third, the research outlines innovative gas payment processes, including gasless transactions, community contribution for gas, and post-payment credit for gas. Finally, a Proof-of-Concept (PoC) is developed on the Ethereum sepolica testnet with solidity, typescript and go-lang language in order to validate the feasibility and advantages of the proposed SuperPaymaster system and SDSS.
+
+
+
+## 

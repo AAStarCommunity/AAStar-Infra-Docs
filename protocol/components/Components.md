@@ -67,18 +67,21 @@ CCI2是赋能社区和个体的协议接口。
 
 
 ## Mechanisms
+社区工具只是帮助社区运转起来，Protocol Mechanisms才是真正帮助社区运转起来的。通过协作的社区，可以建立自己的Protocol Mechanisms。
 Protocol Mechanisms, we follow the nature, learn from mycelium.
 ![](https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202411232234212.png)
 
 
 ![](https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202501221151854.png)
 ![](https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202411221116311.jpg)
-### Cards
-### Perks
-### PNTs
-### Shops
-### Games
-### Agents
+### 社区工具
+我们来概述社区基础课持续运营工具，目标是让一个社区基本运转起来，使用在线工具和AI以及dApps的支持。涵盖社区的onboarding、激励和闭环的基础设施：账户和积分、支付和店铺、徽章和游戏。通过社区成员购买基础的服务来让社区有持续收入从而保持运转。
+再次重申什么是社区？人们想待在那，就是社区。因此，轻型的，协作的，去中心的，无领导的，协商决策的，是社区。
+从具体产品来看，包括三部分：
+1. 社区账户：AirAccount、SuperPaymaster，PNTs，Perks，和个体密切相关的基础和工具层面的组件
+2. 社区支付：PNTs、Cards、Shops，和协作、交换、支付、购买、交易相关的组件
+3. 社区工具：Games、Agents、CBots，和社区管理、协作、游戏、奖励、治理相关的组件
+[组件定义](design.md)
 
 ### Reputation/Entropic
 我们设计了一个 Reputation/Entropic 系统，是一个衡量整个生态活力的系统，简单逻辑是统计我们认为代表生态生命力的行为，然后平均值作为基准线，高于基准线的，就是高活力，是为协议的熵减做出贡献的个体或者社区。
