@@ -1,5 +1,5 @@
-# 组件定义
-这里我们来描述所有组件（系统和子系统）的定义和初步设计）,包括了社区账户：AirAccount、SuperPaymaster，PNTs，Perks，和个体密切相关的基础和工具层面的组件；社区支付：PNTs、Cards、Shops，和协作、交换、支付、购买、交易相关的组件；社区工具：Games、Agents、CBots，和社区管理、协作、游戏、奖励、治理相关的组件
+# 定义
+这里我们来描述所有基础设施和组件（系统和子系统）的定义和初步设计，包括了社区账户：AirAccount、SuperPaymaster，PNTs，Perks，和个体密切相关的基础和工具层面的组件；社区支付：PNTs、Cards、Shops，和协作、交换、支付、购买、交易相关的组件；社区工具：Games、Agents、CBots，和社区管理、协作、游戏、奖励、治理相关的组件
 ## 基础定义
 
 ### AirAccount
@@ -16,9 +16,20 @@ PNTs是每个社区自主发行的token，用来计量贡献，交换物品的�
 徽章，提供各种自定义，炫酷徽章和升级体系，包括和Games的游戏绑定，提供加成。
 
 ### Cards
+和身份体系绑定的NFT，可以是SBT，它主要是存储你的积分，并且自动支付你的链上gas。提供了Web2一样的交互体验+Web3的安全性。
 ### Shops
+只有社区才可以建立Shops，快速建立你的店铺，包括支付等体系，基于区块链的支付和结算，可以实现快速的交易和支付。
+而支付体系单独提供item接口，你可以一键建立一个item定价并发布到一个连接，给任何人支付。
 ### Games
+我们提供一些游戏框架和demo，社区可以自行开发或者设计自己的游戏，目前可二次设计的游戏模式还在思考，Arcadia基本版完成了。
 ### Agents
+社区所有文档的AI助手，可以回答问题，提供帮助，了解社区所有的故事、使命、贡献和细节。
+
+### CBots
+社区的机器人，帮助社区运营设计媒体，群组和内容规划。
+
+### Jurys
+社区资深成员组成，帮助社区进行审核和管理，例如社区成员上架item，是去中心审核的。
 
 ## SDSS
 Standardized Decentralized Services System,又叫Rain Computing Service，雨计算服务。
@@ -33,3 +44,4 @@ Standardized Decentralized Services System,又叫Rain Computing Service，雨计
 
 ### 客户端++
 需要更高要求，包括更高stake和特定的硬件，例如AirAccount服务，必须运行于特定硬件（支持TEE的硬件）。
+
