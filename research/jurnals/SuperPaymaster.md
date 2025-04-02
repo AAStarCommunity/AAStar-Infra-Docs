@@ -3,7 +3,7 @@
 ## Highlights
 
 - We provide a comprehensive overview of existing gas payment systems on the Ethereum blockchain and analyze their inherent weaknesses.
-- We establish key guidelines and requirements for the design of a seamless, cost-effective, and spam-resistant gas payment system.
+- We establish key guidelines and requirements for the design of a decentralized, seamless, and cost-effective gas payment system.
 - We propose a novel gas payment (sponsor) system, leveraging the Ethereum platform and an application sponsorship model to address costly and complex processes.
 - We conduct a proof of concept (PoC) to demonstrate the advantages of the proposed system over existing solutions and to outline potential future research directions.
 
@@ -63,7 +63,5 @@ The specific aspects of gas payment addressed in this research include:
 ### Brief Methodology
 
 To address the research questions, this study employs a design science research methodology. First, it introduces a novel SuperPaymaster system built upon ERC-4337, designed to provide a permissionless, stable, secure, and competitive gas payment service. Second, it proposes a new Standardized Decentralized Service System (SDSS) to establish a foundational service architecture that ensures secure, transparent, and user-friendly decentralized basic computing services. Third, the research outlines innovative gas payment processes, including gasless transactions, community contribution for gas, and post-payment credit for gas. Finally, a Proof-of-Concept (PoC) is developed on the Ethereum sepolica testnet with solidity, typescript and go-lang language in order to validate the feasibility and advantages of the proposed SuperPaymaster system and SDSS.
-
-
 
 ## 

@@ -353,52 +353,142 @@ example first
 
 ### My part
 I will follow above as template to write my journal paper main part.
+把上面的概括范例翻译成中文
+- **当前区块链Gas支付系统的问题：** 
+    当下Gas支付系统的问题：
+    - **用户体验极差：** 从HCI和TAM角度看，几乎具备了所有阻碍特征：高认知负荷、可用性差、成本高、步骤多、体验差、安全性差。
+    - **资产碎片化：** 不同区块链有不同Native Token，需要用户在不同链上拥有小额的Native Token才能发起交易，成本极高。
+	- **效率低下：** 无论对于普通用户还是老手，只是七步和五步区别，每一步都有众多阻塞：开户/购买/跨链/支付/确认等，效率低下。
+- **Gas支付的必要性和Usability问题：** 本文详细介绍了区块链Gas支付中各种常见的用户体验问题：
+	- **Gas的必要性问题：** 因为图灵完备性和公链的公共物品属性，任何人都可以使用，带来死循环风险和任何人的任何意图都可以在EVM或者合约虚拟机中执行，而每一步支付Gas成本，是为保障公共物品的不被滥用，以及避免死循环和恶意攻击耗尽计算资源。
+	- **Ease of Learning/链上交易的复杂流程：** 从用户角度看，你需要17步/10步来完成一次区块链交易：表格和流程图，每一步对用户来说都需要理解很多新概念，学习新技能。
+    - **Gulf of Execution/执行鸿沟：** 作为无许可的区块链，最初目的是不依赖于第三方进行资产的转移，比如目前依赖中心化银行卡，阻塞了很多无银行卡用户，具体流程中还有更多阻塞。
+	- **Gulf of Evaluation/评估鸿沟：** 例如经常不知道为何点击某个按钮，或者不知道点击某个按钮会带来什么结果。
+	- **Efficiency/效率问题：** 无论对于普通用户还是老手，只是七步和五步区别，每一步都有众多阻塞：开户/购买/跨链/支付/确认等，效率低下。
+    - **Error Rate/错误率和误操作：** 点击了提交就无法回退，包括自动的对用户异常行为的自动阻塞也没有，0容错。
+	- **Memorization/可记忆性：** 用户需要记住复杂的流程和步骤，容易遗忘,交互界面复杂，交互流程复杂，老手都头晕。
+	- **Satisfaction/满意度：** 用户主观体验，如界面美观、流畅度等。
+    - **工具问题** 鉴于区块链行业在发展过程中，很多基础工具和基础设施都是缺失的，例如dApps需要自己开发Gas支付相关的系统来提升用户体验。
+    - **Cognitive Load/技术性概念：** 因为区块链本质是一次技术改进社会协作方式的一次尝试，在整个系统中会充斥了各种复杂的技术概念，需要用户理解和掌握，认知负荷大。
+	- **Perceived Ease of Use（感知易用性）**：用户第一次使用系统时的学习成本，例如 Apple 设备的直观操作。
+	
+- **现有对策的局限性：** 目前的的区块链Gas支付系统，在**可用性、认知负荷、新技术接受度**等方面存在局限性，并且现有的**中心化Gas支付系统的问题：**
+	- **安全和隐私问题：** 中心化Gas代付是单一服务商，用户交易容易受到三明治攻击、网络扫描和数据泄露，从而给用户交易造成损失。
+	- **操纵和审查风险：** 中心化服务商容易受到服务所在地的法律法规的不同，从而产生操纵和审查，进而影响交易的公正性和透明性。
+	- **垄断和成本问题：** 中心化服务商容易面临垄断问题，处于商业目的，少数服务商会尝试垄断市场，从而影响Gas支付整体成本。
+- **SuperPaymaster 解决方案：** 本文提出了一种基于以下技术的去中心化、以用户为中心的Gas支付/代付系统：
+    - **标准去中心化服务 (SDSS)：** 使得任何dApps都可以无感知的使用RestFull方式调用Gas支付服务API。
+        - “ENS，依赖区块链的分布式身份系统，赋予任何社区甚至个人可以为任何交易提供SDSS API服务”
+        - “节点注册机制，帮助节点以安全匿名的方式获得一个链上记录和加密的签名验证机制，以及自己的可更新的API服务”
+        - “动态路由发现，通过节点注册机制，外部调用者可以通过缓存或者链上API路由表，发现所有可用的SDSS API服务”
+        
+    - **竞争式报价**：当dApps需要支付Gas时，可以批量调用SDSS API服务，然后选择低价的支付Gas”
+        - “相比之下，传统的Gas支付机制只能接受服务商报价，缺乏透明性和竞争性”
+    - **二次加密**：我们使用了AirAccount的二次加密技术，采用用户的指纹进行交易加密和验证，确保数据安全。
+    - **无许可社区Token**：对于很多用户来说，购买Native Token本身就是一个难题，我们提供了社区发行自己Gas Token服务。
+	- **Cards/OpenCards/无感Gas支付**：为用户提供了基于NFT/SBT的无感Gas支付服务，存储社区积分到自己的Cards来自动支付Gas。
+- **拟议系统的关键要求：** 设计一个易用、安全、去中心化的Gas支付系统的关键要求：
+    - **安全和隐私：** 基于AirAccount的二次加密技术，采用用户的指纹进行交易加密和验证，确保数据安全。
+    - **可用：** 基于SDSS API服务，任何dApps都可以无感知的使用RestFull方式调用Gas支付服务API。
+	- **易用：** 基于OpenCards，任何社会都可以发行自己的Cards和PNTs积分来做Gas Token，从而用户无感支付Gas
+    - **高效**：基于去中心化的海量服务，可以实现快速、高效的Gas支付
+    - **竞争**：基于竞争式报价，可以获得更低的Gas成本
+    - **开放开源无许可：** 任何社区和个人都可以自由部署和运行Gas支付服务并加入SuperPaymaster体系。
+- **SuperPaymaster 信用和信任模型：** 该模型涉及参与者（普通用户，社区，节点运营方，Bundler/RPC。
+    - “得益于治理框架，VC 可以在任何规模的信任社区内有效扩展和运作，范围从单个州到多个国家。在 SSI-MedRx 的信任模型中，验证者信任治理机构和在可信发行者注册表中注册的发行者，该注册表记录在公共或公共许可区块链中。”
+- **SuperPaymaster 流程工作流：** 本文详细介绍了系统中涉及的步骤，包括：
+    - 医疗专业人员使用其专业 ID VC 进行身份验证。
+    - 医生作为 VC 验证患者身份并开具处方，患者的钱包会检查潜在的阿片类药物过度处方风险。
+    - 患者在药房使用 MedRx 代币 (ERC20) 进行 VC 验证和支付过程。
+    - 药房向保险提供商发出退款请求 VC。
+    - 保险公司验证退款请求 VP 并进行报销，利用区块链确保处方已配药并已付款。
+- **实施细节（概念验证）：** PoC 利用了各种技术：
+    - Docker 和 Docker Compose 用于容器化和编排。
+    - Walt.id 的 Wallet Kit 作为管理 SSI 功能并为验证者和发行者门户提供参考实现的后端框架。
+    - Nginx 作为反向代理。
+    - Vue.js 和 Nuxt.js 用于 Web 门户开发。
+    - Solidity 用于智能合约开发（MedRx Token 和 SSI-MedRx）。
+    - Metamask 用于加密钱包集成。
+    - 由于 Walt.id API 目前对 did:polygon 的支持有限，发行者和患者使用 DID:Key 方法。
+    - Polygon 测试网络上的智能合约用于执行反保险欺诈策略（支付和退款验证）。
+- **针对易用性的对策：** 本文解释了 SuperPaymaster 如何解决易用性问题：
+    - **动态服务静态ENS访问：** 任何去中心的服务，都可以通过遵守SDSS标准，进行命名、API定义、路由更新、错误处理、上下限状态更新来组成稳定的服务网络。
+    - **保障成功率/信用机制：** 。
+    - **低成本/竞价模式：** 按活性成分开药使患者能够在通用名药和品牌药之间进行选择，从而减少制药公司激励对医生的影响。
+    - **低成本/社区Token：** 患者的 SSI-MedRx 钱包通过对照患者本地存储的历史记录检查新处方来执行防成瘾规则，以防止超过安全剂量限制。
+- **安全增强：** 敏感数据链下存储，共享需要患者同意。数据交换通过加密通道进行保护。区块链本身不存储任何个人或敏感数据（仅存储元数据和交易信息）。
+- **与相关工作的比较：** 本文将 SuperPaymaster 与现有的基于区块链的Gas支付解决方案进行了比较，突出了其将公共区块链用于特定功能和 SSI 用于全面的身份和数据管理的独特结合，从而解决了其他方法中发现的局限性（例如，限制无国界性的私有区块链、链上存储敏感数据、缺乏强大的防欺诈机制）。
 
-**Problems with Current Gas Payment Systems:** The paper highlights several key vulnerabilities and challenges in existing centralized healthcare systems:
-- **Extremely unfriendly to new users:** If you want to launch a normal transfer token transaction or just claim a free NFT, you need to go through a long process of setting up a wallet, connecting to a dapp, and paying gas, especially the gas token buying and payment.
-- **Data Fragmentation and Lack of Interoperability:** Different healthcare institutions use incompatible data formats, hindering seamless data exchange, causing delays, miscommunication, and increased costs.
-- **Security and Privacy Concerns:** Centralized databases are single points of failure, susceptible to cyberattacks and data breaches, compromising sensitive patient information and leading to medical identity theft.
-- **Healthcare Fraud:** The paper details various prevalent healthcare fraud types:
-- **Medical Identity Theft:** Illegal use of personal information to receive medical treatment or services, causing financial losses and incorrect medical records.
-- **Phantom Billing:** Submitting false claims for services never performed, often involving collusion between providers and pharmacists.
-- **Kickbacks:** Financial incentives offered by pharmaceutical companies to healthcare professionals for promoting specific drugs, potentially compromising medical decisions.
-- **Opioid Overprescribing:** Excessive prescription of opioids, contributing to the opioid crisis due to misleading marketing and potential kickbacks.
-- **Limitations of Existing Countermeasures:** Current measures like e-prescription systems and Prescription Drug Monitoring Programs (PDMPs) have limitations in terms of security, interoperability, and enforcement.
-- **The SSI-MedRx Solution:** The paper proposes a decentralized, patient-centric healthcare system based on:
-- **Self-Sovereign Identity (SSI):** Empowers patients with complete control over their personal and health data, stored in their own digital wallets. This allows them to decide what information to share, with whom, and when.
-- "By design, our system empowers patients by granting them complete control over their personal and health data."
-- "Thanks to the self-sovereign identity model, SSI-MedRx puts patients at the center of their healthcare journey, fostering a patient-centric approach. It empowers them to engage more proactively in their health situation and decide what information to share, with whom, and when."
-- **Blockchain Technology:** Utilized as a public ledger to store non-confidential data, such as prescription status and payment transactions, providing immutability, transparency, and a decentralized consensus mechanism to combat fraud, particularly phantom billing.
-- "In contrast, our proposed solution, SSI-MedRx, leverages public blockchain to store non-confidential data necessary to prevent phantom billing frauds."
-- **Verifiable Credentials (VCs) and Verifiable Presentations (VPs):** Used for secure and privacy-preserving data exchange between stakeholders. Patient identity, insurance information, prescriptions, and invoices are represented as VCs stored in the patient's wallet.
-- **Off-chain Data Storage:** Sensitive personal and health data are stored locally on the patient's devices within their SSI-MedRx wallet, enhancing privacy and reducing the risk of large-scale data breaches.
-- **Key Requirements for the Proposed System:** The authors outline critical requirements for designing a fraud-resilient and privacy-preserving healthcare system:
-- **Security:** Robust authentication (SSI-based), full control and ownership of data by users, and public verifiability and authenticity of healthcare-related data.
-- **Privacy:** Data confidentiality through off-chain storage and auditable consent mechanisms, giving patients control over data sharing.
-- **Fraud-Resilience:** Mechanisms to prevent phantom billing (verification of prescription authenticity, consent, and dispensing), kickbacks (prescription by active ingredient), and opioid overprescribing (wallet-based risk assessment).
-- **Interoperability:** Adherence to standardized data formats (JSON-LD, JWT) and communication protocols (OpenID for Verifiable Credentials - OID4VC) to enable seamless data exchange between different healthcare entities, even across borders.
-- **Borderlessness:** Ability for any verifier to check data validity and authenticity regardless of geographical location, supported by a global governance framework.
-- **SSI-MedRx Ecosystem and Trust Model:** The system involves several actors (Governance Authority, Government/Insurance, Healthcare Authority, Patient, Doctor, Pharmacy) and relies on a trust model where verifiers trust the Governance Authority and issuers registered in a Trusted Issuer Registry (potentially on a public blockchain). This framework enables cross-border recognition of verifiable credentials.
-- "Thanks to the governance framework, VCs can scale and function effectively within trust communities of any size, ranging from a single state to multiple countries. In SSI-MedRx’s trust model, the verifiers trust governance authority and issuers registered in the Trusted Issuer Registry, which is recorded in the public or public permissioned blockchain."
-- **SSI-MedRx Process Workflow:** The paper details the steps involved in the system, including:
-- Healthcare professional authentication using their professional ID VC.
-- Patient identity verification and prescription issuance by the doctor as a VC, with the patient's wallet checking for potential opioid overprescribing risks.
-- Patient's VC verification and payment process at the pharmacy using MedRx tokens (ERC20).
-- Issuance of a refund request VC by the pharmacy to the insurance provider.
-- Verification of the refund request VP and reimbursement by the insurance, leveraging blockchain to ensure the prescription was dispensed and paid.
-- **Implementation Details (Proof of Concept):** The PoC utilizes various technologies:
-- Docker and Docker Compose for containerization and orchestration.
-- Walt.id's Wallet Kit as the backend framework for managing SSI capabilities and providing reference implementations for verifier and issuer portals.
-- Nginx as a reverse proxy.
-- Vue.js and Nuxt.js for web portal development.
-- Solidity for smart contract development (MedRx Token and SSI-MedRx).
-- Metamask for crypto-wallet integration.
-- DID:Key method for issuers and patients due to current limitations with did:polygon support in Walt.id APIs.
-- Smart contracts on the Polygon test network to enforce anti-insurance fraud policies (payment and refund verification).
-- **Countermeasures Against Specific Frauds:** The paper explains how SSI-MedRx addresses each type of healthcare fraud:
-- **Medical Identity Theft:** Decentralized data storage, strong SSI-based authentication, and the need for private keys to prove ownership of information make impersonation significantly harder. Challenge policies prevent VP replay attacks.
-- **Phantom Billing:** Requiring pharmacies to include the patient's prescription VP in the refund request VC allows insurance companies to verify authenticity and consent. Blockchain tracks prescription status and payment.
-- **Kickbacks:** Prescribing drugs by active ingredient empowers patients to choose between generic and brand-name options, reducing the influence of pharmaceutical company incentives on doctors.
-- **Opioid Overprescribing:** The patient's SSI-MedRx wallet enforces anti-addiction rules by checking new prescriptions against the patient's history (stored locally) to prevent exceeding safe dosage limits.
-- **Privacy Enhancement:** Sensitive data is stored off-chain with patient consent required for sharing. Data exchange is secured through encrypted channels. No personal or sensitive data is stored on the blockchain itself (only metadata and transaction information).
-- **Comparison with Related Work:** The paper compares SSI-MedRx with existing blockchain-based healthcare solutions, highlighting its unique combination of public blockchain for specific functionalities and SSI for comprehensive identity and data management, addressing limitations found in other approaches (e.g., private blockchains limiting borderlessness, storage of sensitive data on-chain, lack of robust anti-fraud mechanisms).
+#### AI概述再次提炼：
+好的，这是您提供的论文框架结构和要点的中文翻译，力求准确、专业，适合博士论文参考：
+
+该论文强调了现有中心化医疗系统中存在的几个关键漏洞和挑战：
+
+*   **数据碎片化与缺乏互操作性：** 不同的医疗机构使用不兼容的数据格式，阻碍了无缝的数据交换，导致延误、沟通不畅和成本增加。
+*   **安全与隐私担忧：** 中心化数据库是单点故障，易受网络攻击和数据泄露的影响，危及敏感的患者信息，并可能导致医疗身份盗窃。
+*   **医疗欺诈：** 论文详细列举了各种普遍存在的医疗欺诈类型：
+    *   **医疗身份盗窃：** 非法使用个人信息以获取医疗服务，导致财务损失和错误的医疗记录。
+    *   **虚假账单（Phantom Billing）：** 为从未提供过的服务提交虚假报销申请，通常涉及医疗服务提供者和药剂师之间的勾结。
+    *   **回扣（Kickbacks）：** 制药公司向医疗专业人员提供经济激励以推广特定药物，可能影响医疗决策的公正性。
+    *   **阿片类药物过度处方：** 过量开具阿片类药物处方，由于误导性营销和潜在的回扣，加剧了阿片类药物危机。
+*   **现有对策的局限性：** 当前的措施，如电子处方系统和处方药监测计划（PDMPs），在安全性、互操作性和执行力方面存在局限。
+
+**SSI-MedRx 解决方案：**
+该论文提出了一种基于以下技术的去中心化、以患者为中心的医疗系统：
+
+*   **自主主权身份 (Self-Sovereign Identity, SSI)：** 赋予患者对其个人和健康数据的完全控制权，这些数据存储在他们自己的数字钱包中。这使得患者能够决定分享哪些信息、与谁分享以及何时分享。
+    *   “通过设计，我们的系统通过赋予患者对其个人和健康数据的完全控制权来赋能患者。”
+    *   “得益于自主主权身份模型，SSI-MedRx 将患者置于其医疗旅程的中心， fostering 一种以患者为中心的方法。它使患者能够更积极地参与到自己的健康状况管理中，并决定分享哪些信息、与谁分享以及何时分享。”
+*   **区块链技术 (Blockchain Technology)：** 用作公共账本，存储非机密数据，例如处方状态和支付交易，提供不可篡改性、透明性和去中心化的共识机制，以打击欺诈，特别是虚假账单。
+    *   “相比之下，我们提出的解决方案 SSI-MedRx 利用公共区块链来存储防止虚假账单欺诈所必需的非机密数据。”
+*   **可验证凭证 (Verifiable Credentials, VCs) 和可验证表述 (Verifiable Presentations, VPs)：** 用于利益相关者之间安全且保护隐私的数据交换。患者身份、保险信息、处方和发票等都表示为存储在患者钱包中的 VCs。
+*   **链下数据存储 (Off-chain Data Storage)：** 敏感的个人和健康数据存储在患者设备的本地 SSI-MedRx 钱包内，增强了隐私性并降低了大规模数据泄露的风险。
+
+**拟议系统的关键要求：**
+作者概述了设计一个具有抗欺诈性和隐私保护性的医疗系统的关键要求：
+
+*   **安全性 (Security)：** 强大的身份验证（基于 SSI）、用户对数据的完全控制权和所有权，以及医疗相关数据的公开可验证性和真实性。
+*   **隐私性 (Privacy)：** 通过链下存储和可审计的同意机制实现数据机密性，让患者控制数据共享。
+*   **抗欺诈性 (Fraud-Resilience)：** 防止虚假账单（验证处方的真实性、患者同意和配药情况）、回扣（按活性成分开具处方）和阿片类药物过度处方（基于钱包的风险评估）的机制。
+*   **互操作性 (Interoperability)：** 遵守标准化数据格式（JSON-LD, JWT）和通信协议（OpenID for Verifiable Credentials - OID4VC），以实现不同医疗实体之间（甚至跨境）的无缝数据交换。
+*   **无国界性 (Borderlessness)：** 任何验证者无论身处何地都能检查数据的有效性和真实性，由全球治理框架支持。
+
+**SSI-MedRx 生态系统与信任模型：**
+该系统涉及多个参与者（治理机构、政府/保险机构、医疗管理机构、患者、医生、药房），并依赖于一个信任模型：验证者信任治理机构以及在可信发行方注册库（可能记录在公共区块链上）中注册的发行方。该框架支持可验证凭证的跨境认可。
+
+*   “得益于治理框架，VCs 可以在任何规模的信任社区内有效扩展和运作，范围可以从单个州到多个国家。在 SSI-MedRx 的信任模型中，验证者信任治理机构以及记录在公共链或公共许可链上的可信发行方注册库中的发行方。”
+
+**SSI-MedRx 流程工作流：**
+论文详细说明了系统涉及的步骤，包括：
+
+*   医疗专业人员使用其职业身份 VC 进行身份验证。
+*   医生进行患者身份验证并以 VC 形式签发处方，同时患者钱包会检查潜在的阿片类药物过度处方风险。
+*   患者在药房使用 MedRx 代币（ERC20）进行 VC 验证和支付流程。
+*   药房向保险提供商发出退款请求 VC。
+*   保险公司验证退款请求 VP 并进行报销，利用区块链确保处方已被配发和支付。
+
+**实施细节（概念验证 PoC）：**
+概念验证（PoC）利用了多种技术：
+
+*   Docker 和 Docker Compose 用于容器化和编排。
+*   Walt.id 的 Wallet Kit 作为后端框架，用于管理 SSI 功能并提供验证者和发行者门户的参考实现。
+*   Nginx 作为反向代理。
+*   Vue.js 和 Nuxt.js 用于 Web 门户开发。
+*   Solidity 用于智能合约开发（MedRx 代币和 SSI-MedRx 合约）。
+*   Metamask 用于加密钱包集成。
+*   由于 Walt.id API 目前对 did:polygon 的支持有限，发行方和患者使用 DID:Key 方法。
+*   在 Polygon 测试网络上部署智能合约，以强制执行反保险欺诈策略（支付和退款验证）。
+
+**针对特定欺诈的对策：**
+论文解释了 SSI-MedRx 如何应对每种类型的医疗欺诈：
+
+*   **医疗身份盗窃：** 去中心化数据存储、基于 SSI 的强身份验证以及需要私钥来证明信息所有权，使得冒充行为变得极其困难。质询策略（Challenge policies）可防止 VP 重放攻击。
+*   **虚假账单：** 要求药房在退款请求 VC 中包含患者的处方 VP，使保险公司能够验证其真实性和患者同意。区块链跟踪处方状态和支付情况。
+*   **回扣：** 按活性成分开具处方，使患者能够在仿制药和品牌药之间进行选择，减少了制药公司激励对医生决策的影响。
+*   **阿片类药物过度处方：** 患者的 SSI-MedRx 钱包通过对照患者（本地存储的）用药史检查新处方，强制执行抗成瘾规则，以防止超过安全剂量限制。
+
+**隐私增强：**
+敏感数据存储在链下，共享前需要获得患者同意。数据交换通过加密通道进行保护。区块链本身不存储任何个人或敏感数据（仅存储元数据和交易信息）。
+
+**与相关工作的比较：**
+论文将 SSI-MedRx 与现有的基于区块链的医疗解决方案进行了比较，强调了其将公共区块链用于特定功能与 SSI 用于全面身份和数据管理相结合的独特之处，解决了其他方法中存在的局限性（例如，私有链限制了无国界性、在链上存储敏感数据、缺乏稳健的反欺诈机制等）。
