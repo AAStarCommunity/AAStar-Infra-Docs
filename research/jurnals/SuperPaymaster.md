@@ -61,12 +61,12 @@ This research contributes a novel, decentralized gas payment solution (SuperPaym
 Employing a design science approach, this research involves: (1) Designing the SuperPaymaster system and SDSS architecture. (2) Implementing key components like competitive quoting, NFT Gas Cards, and permissionless node registration. (3) Developing and evaluating a Proof-of-Concept (PoC) on the Ethereum Sepolia testnet using Solidity, Go, and TypeScript. The remainder of this paper is organized as follows: Section 2 reviews related work. Section 3 details the proposed system design. Section 4 presents the evaluation methodology and results. Section 5 discusses the findings and limitations. Section 6 concludes the paper and outlines future work.
 
 
-## Main part
-### 2. Gas Payment System and Threat Model 6/1000
-#### 2.1 Essential Services of Gas Payment System
+
+## 2. Gas Payment System and Threat Model 6/1000
+### 2.1 Essential Services of Gas Payment System
         *   2.1.1 Necessity of Gas Payment (Gas的必要性问题)
         *   2.1.2 Current Gas Payment Workflow (概述现有支付流程，为后续HCI分析铺垫)
-#### 2.2 Threat Model: Challenges and Vulnerabilities in Current Systems
+### 2.2 Threat Model: Challenges and Vulnerabilities in Current Systems
         *   2.2.1 User Experience Deficiencies (用户体验极差 - HCI/TAM视角概述)
             *   *(HCI详细分析移至 3.3)*
         *   2.2.2 Asset Fragmentation (资产碎片化)
@@ -96,8 +96,8 @@ Employing a design science approach, this research involves: (1) Designing the S
         *   2.4.5 Limited Gas Token Support (不接受自定义ERC20)
         *   2.4.6 Long-term Monopoly and Cost Inflation Risks (垄断与成本上升)
 
-### 3. The Proposed System Overview: SuperPaymaster 8/1500
-#### 3.1 Requirements Specification for a Decentralized Gas Payment System
+## 3. The Proposed System Overview: SuperPaymaster 8/1500
+### 3.1 Requirements Specification for a Decentralized Gas Payment System
         *   (将“拟议系统的关键要求”作为本节内容)
         *   3.1.1 Security Requirements (安全)
         *   3.1.2 Privacy Requirements (隐私)
@@ -107,11 +107,11 @@ Employing a design science approach, this research involves: (1) Designing the S
         *   3.1.6 Efficiency Requirements (高效)
         *   3.1.7 Competitiveness Requirements (竞争)
         *   3.1.8 Openness and Permissionless Requirements (开放开源无许可)
-#### 3.2 Overview of the SuperPaymaster System
+### 3.2 Overview of the SuperPaymaster System
         *   (简要介绍SuperPaymaster的目标、核心理念和主要组成部分)
-#### 3.3 Involved Actors and Roles
+### 3.3 Involved Actors and Roles
         *   (列出并描述参与者：普通用户，社区，节点运营方，Bundler/RPC，第三方Swap等)
-#### 3.4 SDSS (Standardized Decentralized Service System) Overview
+### 3.4 SDSS (Standardized Decentralized Service System) Overview
         *   (简要介绍SDSS的目标、核心理念和主要组成部分)
         *   3.4.1 ENS for Service Discovery (ENS)
         *   3.4.2 Node Registration Mechanism (节点注册机制)
@@ -160,25 +160,25 @@ Employing a design science approach, this research involves: (1) Designing the S
         *   Step 7: Viewing Transaction Records
         *   Step 8: Checking Balances and History      
 
-### 4. Implementation (Proof of Concept - PoC) 5/1500
-#### 4.1 Technology Stack
+## 4. Implementation (Proof of Concept - PoC) 5/1500
+### 4.1 Technology Stack
         *   (列出Tauri, Rust, Go, Next.js, Solidity, AirAccount, Supabase等)
-#### 4.2 System Setup and Configuration
+### 4.2 System Setup and Configuration
         *   (描述测试环境，如Sepolia测试网)
-#### 4.3 Smart Contract Development
+### 4.3 Smart Contract Development
         *   (SuperPaymaster合约, ENS API合约等关键合约的实现要点)
-#### 4.4 Backend Service Implementation
+### 4.4 Backend Service Implementation
         *   (Go服务实现要点：ENS管理, 节点验证, 签名服务)
-#### 4.5 Frontend and Desktop Application Development
+### 4.5 Frontend and Desktop Application Development
         *   (Next.js Web交互, Tauri/Rust节点管理应用实现要点)
-#### 4.6 AirAccount Integration
+### 4.6 AirAccount Integration
         *   (描述如何集成AirAccount的账户生成和二次加密功能)
-#### 4.7 SDSS Implementation Details
+### 4.7 SDSS Implementation Details
         *   (ENS注册、节点发现、API接口的具体实现方式)
-#### 4.8 OpenCards/OpenPNTs Implementation
+### 4.8 OpenCards/OpenPNTs Implementation
         *   (NFT/SBT合约实现，积分管理逻辑)
 
-### 5. Discussion
+## 5. Discussion
         *   5.1 Addressing Usability Challenges (讨论SuperPaymaster如何解决易用性问题)
             *   ENS for Dynamic Service Access
             *   Reputation Mechanism for Success Rate Guarantee
@@ -187,13 +187,14 @@ Employing a design science approach, this research involves: (1) Designing the S
             *   NFT Cards for Seamless Payment
         *   5.2 Security Enhancements (讨论安全增强措施：二次加密, TEE)
         *   5.3 Implications of Findings (对评估结果的解读 - *需结合第5章评估结果*)
-        *   5.4 Limitations (研究的局限性 - *可从第6章移部分过来*)
-### 6 Related Work and Comparison
+        *   5.2.4 Limitations (研究的局限性 - *可从第6章移部分过来*)
+
+## 6 Related Work and Comparison
         *   (将SuperPaymaster与现有方案在安全、隐私、成本、开放性、易用性、效率等方面进行详细比较，突出优势和差异)
-### 7 Conclusion
-        *   (总结研究的主要贡献和发现)
-    *   **8.4 Future Work**
-        *   (提出未来的研究方向)
+        
+## 7 Conclusion
+        *   7.1 (总结研究的主要贡献和发现)
+        *   7.2 Future Work 提出未来的研究方向
 
 ## Acknowledgments
 This research was supported by the Plancker^ Community, and development was supported by the AAStar Team which was a subsidiary of Plancker^ in 2023 to 2024.
