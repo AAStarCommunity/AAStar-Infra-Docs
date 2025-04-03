@@ -250,8 +250,6 @@ The remainder of this paper is organized as follows: Section 2 reviews the relev
 
 
 
-
-
 ### Introduction 再优化和补充
 
 Background: 提供足够的背景信息来帮助读者理解你的研究领域和研究问题
@@ -297,8 +295,140 @@ The remainder of this paper is organized as follows: Section 2 reviews the relev
 
 **利用人机交互（HCI）原理，通过ERC-4337等账户抽象技术，优化以太坊（及EVM兼容链）的Gas支付体验，以降低成本、提升用户体验（UX）和系统效率，最终促进区块链的大规模采用。**
 
+### v2.1
+
+### Background
+
+Blockchain technology has emerged as a transformative force, significantly impacting societal collaborations and facilitating the exchange of digital assets, with a market capitalization that has reached trillions of dollars. The acceptance and widespread adoption of new technologies, as suggested by the Technology Acceptance Model (TAM) and principles of Human-Computer Interaction (HCI), are heavily influenced by users' perceptions of their utility and the quality of their experience (UX). From a TAM perspective, users assess a technology's perceived usefulness (the benefits they believe it offers) and perceived ease of use (how simple they find it to operate). Greater acceptance is anticipated when the perceived benefits outweigh the costs (financial, temporal, effort-related) and the technology is sufficiently user-friendly. Correspondingly, HCI principles highlight that large-scale adoption hinges on factors beyond direct costs, including the efficiency of human-computer interaction, user satisfaction, ease of use, user experience, effectiveness, and efficiency.
+
+### Problem Statement
+
+Despite the advancements in blockchain technology, a truly user-friendly blockchain account system remains elusive, particularly in the context of gas payment for blockchain applications. Transaction is the only way to operate with your blockchain assets. Ethereum burn gas 170 billion US dollar everyday([https://ultrasound.money/]), not including hundreds of layer2 chains. It is critical question for crypto users and new comers: lower the cost, smooth the gas payment, improve the UX. The current gas payment process is often cited as a major impediment to user experience due to its high costs, inefficiency, and complexity. This barrier prevents many individuals from even evaluating the security, usability, and value of novel blockchain applications. This research investigates the challenges associated with blockchain account gas payments, including complex procedures, intricate concepts, high costs, multiple steps, and poor user experience. Furthermore, it addresses the risks of centralized entities monopolizing prices and engaging in censorship, proposing a solution based on Account Abstraction (ERC-4337) and a Standardized Decentralized Service System (SDSS).
 
 
+### Research Gap
+
+Ethereum's Account Abstraction proposal, ERC-4337, offers a framework to mitigate the aforementioned issues. However, while it provides a protocol-level solution, its practical implementation and widespread adoption are still in nascent stages. Moreover, the existing approaches within the ERC-4337 ecosystem do not fully address the risks of centralized price monopolies and censorship. A significant gap remains in providing truly decentralized gas payment services. There are several companies who monopolize the paymaster and bundler services, which may lead to the limitations in the acceptance of diverse ERC-20 tokens for gas fees, the lack of permissionless operation of gas sponsorship and payment services, uneven service coverage across different applications and chains, and the complexities associated with integrating these services into decentralized applications (dApps). Blockchain is emergenced from open source and community, not a company or a group of companies, we need community to build a decentralized gas payment system to get low-cost and smooth gas payment.
+
+
+### Research Objectives and Questions
+
+This research aims to address the limitations of current blockchain account gas payment systems by proposing a comprehensive solution leveraging ERC-4337 and related protocols. The primary objective is to overcome the challenges of cognitive complexity, operational difficulties, high costs, multiple steps, poor user experience, and security concerns associated with existing gas payment methods. Furthermore, this study seeks to mitigate the risks of centralized price monopolies and censorship prevalent in current solutions.
+
+The central research questions guiding this study are:
+
+* What are the flaws of current gas payment solutions? The cognitive costs, operational steps, time spending (expenditures), required tools, involved parties, interaction processes, financial costs, potential errors, and security risks for new users completing an on-chain transaction and more?
+* What are the limitations of current gas payment solutions, particularly concerning price monopoly and censorship risks?
+* How can a decentralized framework based on ERC-4337 and a Standardized Decentralized Service System (SDSS) effectively address the identified challenges and limitations in blockchain account gas payments?
+
+
+### Significance of the Study
+
+By integrating insights from HCI and TAM, this research offers a holistic perspective on user acceptance and experience with blockchain technology. This interdisciplinary approach not only contributes to the academic field by innovating gas payment solutions but also aims to provide the blockchain industry with a truly decentralized alternative for gas payments. The practical implications of this research include offering users more secure, user-friendly, cost-effective, and efficient gas payment services for blockchain accounts. Given that decentralization is a core tenet of blockchain technology, the proposed solution, built upon the SDSS (a service architecture introduced in this paper), is of significant value.
+As a new technology, blockchain is seen by most people as an intricate field of cryptography, complex algorithms, and numerous challenging new concepts, which hinders the development of the blockchain industry and its future widespread application. This research innovatively approaches the first barrier to onboarding new users to blockchain—from the perspectives of TAM and HCI—by improving gas payment processes, thereby giving products a sense of warmth and friendliness. This will facilitate easier and more convenient access to blockchain for the public, enabling technology to better serve society.
+
+
+### Scope and Limitations
+
+This research primarily focuses on the challenges and solutions related to gas payments for blockchain accounts on EVM-compatible chains. It does not encompass other aspects of blockchain account management, such as account creation, private key management, other forms of payment, general security considerations beyond gas payment, or privacy aspects.
+
+The specific aspects of gas payment addressed in this research include:
+
+1.  Cognitive complexity, operational difficulty, high cost, multiple steps, poor user experience, and security concerns.
+2.  Analysis of current solutions, focusing on price monopoly and censorship risks.
+3.  The proposed solution's attributes: decentralization, competition, transparency, security, low cost, efficiency, ease of use, and trustworthiness.
+
+
+### Brief Methodology
+
+To address the research questions, this study employs a design science research methodology. First, it introduces a novel SuperPaymaster system built upon ERC-4337, designed to provide a permissionless, stable, secure, and competitive gas payment service. Second, it proposes a new Standardized Decentralized Service System (SDSS) to establish a foundational service architecture that ensures secure, transparent, and user-friendly decentralized basic computing services. Third, the research outlines innovative gas payment processes, including gasless transactions, community contribution for gas, and post-payment credit for gas. Finally, a Proof-of-Concept (PoC) is developed on the Ethereum sepolica testnet with solidity, typescript and go-lang language in order to validate the feasibility and advantages of the proposed SuperPaymaster system and SDSS.
+
+
+### V3
+初稿的建议：
+
+篇幅控制： 800字确实比常规的500字左右要长。主要原因在于：
+
+背景铺垫略多： TAM和HCI的理论介绍可以更简洁，或者将其部分细节移至后续的“相关工作”或“理论基础”章节。
+
+问题陈述与研究差距略有重叠： 可以更清晰地区分“现有系统普遍存在的问题”（Problem Statement）和“针对ERC-4337等已有解决方案仍存在的具体不足”（Research Gap）。
+
+研究问题表述： 第一个研究问题“What are the flaws...” 范围较广，可以考虑拆分或聚焦。
+
+意义阐述： Significance部分可以更凝练，突出核心贡献。
+
+方法介绍： Brief Methodology部分可以更简洁，只点明方法论和核心技术即可。
+
+结构逻辑：
+
+Problem Statement 可以更聚焦于用户直接面临的痛点（成本、复杂性、效率）。
+
+Research Gap 应更明确地指出现有解决方案（特别是ERC-4337相关实现）的具体不足之处，例如中心化风险、Token支持局限等，为你的SuperPaymaster和SDSS的提出做铺垫。
+
+Research Objectives 应更直接地对应Research Questions，并体现出你的解决方案要达成的具体目标。
+
+Scope and Limitations 中的第3点“The proposed solution's attributes”更像是研究目标或系统特性，可以移到Objectives或Methodology部分简述。
+
+语言表达：
+
+部分语句可以更精炼、学术化。例如，“It is critical question for crypto users and new comers” 可以改为 “Addressing these challenges is critical for both existing cryptocurrency users and potential newcomers.”
+
+避免口语化表达，如“Blockchain is emergenced from open source and community, not a company or a group of companies”。
+
+确保术语使用一致且准确。
+
+修改说明：
+
+合并与精简： 将原Background和部分Problem Statement合并，更直接地引入Gas支付问题。将TAM/HCI理论提及，但详细阐述移至后续章节。
+
+聚焦Research Gap： 明确指出ERC-4337虽有进展，但现有实现的中心化等问题是本研究要解决的核心差距。
+
+凝练Objectives & Questions： 使目标更具体（设计、实现、评估SuperPaymaster/SDSS），研究问题更聚焦于方案的有效性、抗中心化能力和可行性。
+
+重组Significance： 突出SuperPaymaster/SDSS的创新性和对去中心化、用户体验的贡献。
+
+调整Scope： 将原第3点移出，使Scope更专注于研究边界。
+
+简化Methodology： 只保留核心方法和技术栈概览。
+
+加入Structure： 在末尾添加了标准的论文结构概述。
+
+语言润色： 使用了更简洁、学术化的表达。
+
+#### final introduction
+1. Introduction
+
+1.1 Background and Motivation
+
+Blockchain technology represents a significant technological advancement with the potential to reshape societal collaboration and digital asset exchange, evidenced by its multi-trillion dollar market capitalization [Optional: Add citation]. However, realizing its full potential for mass adoption hinges critically on user acceptance and experience. Drawing upon the Technology Acceptance Model (TAM) and principles of Human-Computer Interaction (HCI), user adoption is largely determined by perceived usefulness and perceived ease of use [Optional: Add citation for TAM/HCI]. While blockchain offers novel functionalities (usefulness), significant barriers related to usability, efficiency, and cost currently hinder its perceived ease of use and overall user experience, impeding broader acceptance.
+
+1.2 Problem Statement
+
+A primary obstacle within the current blockchain ecosystem, particularly on platforms like Ethereum and EVM-compatible chains, is the cumbersome and costly process of paying transaction fees, commonly known as "gas". Daily gas consumption on Ethereum alone highlights the economic scale of this friction point [Optional: Cite ultrasound.money]. Users, especially newcomers, face a steep learning curve involving complex concepts, multi-step procedures (often exceeding 10-15 steps involving exchanges, cross-chain transfers, and wallet management), high and volatile costs, and a generally poor user experience [Optional: Briefly mention key HCI pain points like high cognitive load, execution/evaluation gulfs]. These usability challenges act as significant deterrents, preventing users from fully engaging with and realizing the value of decentralized applications (dApps).
+
+1.3 Research Gap
+
+While solutions like Ethereum's Account Abstraction standard (ERC-4337) aim to alleviate some of these issues by enabling features like gas sponsorship (Paymasters), current implementations often fall short [Optional: Add citation for ERC-4337]. Existing approaches frequently rely on centralized relayers (Bundlers) and Paymasters, reintroducing risks of price manipulation, censorship, and single points of failure – counteracting blockchain's core decentralization ethos. Furthermore, limitations persist regarding the flexible use of diverse ERC-20 tokens for gas payments, permissionless service operation, and seamless integration for dApp developers. A critical gap exists in providing a truly decentralized, competitive, and user-friendly gas payment infrastructure that aligns with the open, community-driven nature of blockchain.
+
+1.4 Research Objectives and Questions
+
+This research aims to design, implement, and evaluate a novel system, SuperPaymaster, built upon ERC-4337 and a proposed Standardized Decentralized Service System (SDSS) architecture, to address the identified gaps in blockchain gas payments. The primary objectives are to significantly reduce gas payment costs through competition, enhance user experience by simplifying interactions (e.g., via NFT-based "Gas Cards" and seamless payments), improve operational efficiency, and mitigate the risks associated with centralized intermediaries.
+
+This study is guided by the following key research questions:
+
+How can a decentralized gas payment system based on ERC-4337 and SDSS effectively reduce transaction costs and improve user experience compared to existing methods?
+
+What mechanisms within this system can mitigate the risks of price monopoly and censorship inherent in centralized gas payment solutions?
+
+How feasible and efficient is the proposed SuperPaymaster system and SDSS architecture in a practical implementation?
+
+1.5 Significance and Scope
+
+This research contributes a novel, decentralized gas payment solution (SuperPaymaster) and a foundational service architecture (SDSS), offering a viable alternative to centralized approaches. By integrating HCI principles, it directly tackles the usability barriers hindering blockchain adoption, potentially making dApps significantly more accessible. The study's significance lies in its potential to foster a more open, competitive, and user-centric gas payment ecosystem, aligning with blockchain's core values. The scope is focused on gas payment optimization within EVM-compatible chains using ERC-4337, evaluating cost, user experience (usability, cognitive load), efficiency, and decentralization aspects. It does not cover broader account management or non-gas-related security issues.
+
+1.6 Brief Methodology and Structure
+
+Employing a design science approach, this research involves: (1) Designing the SuperPaymaster system and SDSS architecture. (2) Implementing key components like competitive quoting, NFT Gas Cards, and permissionless node registration. (3) Developing and evaluating a Proof-of-Concept (PoC) on the Ethereum Sepolia testnet using Solidity, Go, and TypeScript. The remainder of this paper is organized as follows: Section 2 reviews related work. Section 3 details the proposed system design. Section 4 presents the evaluation methodology and results. Section 5 discusses the findings and limitations. Section 6 concludes the paper and outlines future work.
 ## Main part
 example first
 ### Main Themes and Important Ideas
@@ -351,7 +481,7 @@ example first
 - **Privacy Enhancement:** Sensitive data is stored off-chain with patient consent required for sharing. Data exchange is secured through encrypted channels. No personal or sensitive data is stored on the blockchain itself (only metadata and transaction information).
 - **Comparison with Related Work:** The paper compares SSI-MedRx with existing blockchain-based healthcare solutions, highlighting its unique combination of public blockchain for specific functionalities and SSI for comprehensive identity and data management, addressing limitations found in other approaches (e.g., private blockchains limiting borderlessness, storage of sensitive data on-chain, lack of robust anti-fraud mechanisms).
 
-### My part
+### Main part
 I will follow above as template to write my journal paper main part.
 把上面的概括范例翻译成中文
 - **当前区块链Gas支付系统的问题和挑战：** 
@@ -458,4 +588,155 @@ I will follow above as template to write my journal paper main part.
 - **安全增强：** 采用了AirAccount的二次加密技术，采用用户的指纹进行交易加密和验证，确保数据安全，同时节点使用了TEE技术，确保你的数据不会泄露，交易不会被抢跑。
 - **与相关工作的比较：** 本文将 SuperPaymaster 与现有的基于区块链的Gas支付解决方案进行了比较，突出了安全和隐私、成本和开放，易用性和效率几个方面，从而解决了其他方法中发现的局限性（例如：缺乏数据保密机制、缺乏二次验证机制、缺乏竞争式报价机制、缺乏开放的社区支持等）。
 
-#### AI概述再次提炼：
+### Main Part AI 建议结构
+我已经仔细阅读了您提供的已完成的第1、2部分内容、主体部分的概述，以及您希望模仿的SSI-MedRx论文结构。基于这些信息，我现在为您拆分主体部分概述，并按照模仿结构的剩余部分（第3至第8部分）及其子标题进行组织。
+
+**重要说明：**
+
+*   以下结构和标题是基于您提供的主体概述内容，并尽量贴合SSI-MedRx论文的逻辑层次进行的拆分和重组。
+*   我保留了您主体概述中的核心内容要点，仅做结构上的调整和标题的提炼。
+*   部分内容可能在不同章节有所涉及，我根据模仿结构的侧重点进行了归类。例如，HCI的详细分析放在了第3部分，而解决方案的具体技术细节放在了第4、5、6、7部分。
+*   如果某些子标题在您的概述中没有直接对应的内容，我会标注出来，提示您需要补充。
+*   我添加了一些建议性的子标题，以使结构更完整，您可以根据实际内容调整或删除。
+
+---
+
+**主体部分拆分与结构建议 (模仿SSI-MedRx结构)**
+
+**3. Gas Payment System and Threat Model (对应模仿结构第3部分)**
+    *   **3.1 Essential Services of Gas Payment System**
+        *   3.1.1 Necessity of Gas Payment (Gas的必要性问题)
+        *   3.1.2 Current Gas Payment Workflow (概述现有支付流程，为后续HCI分析铺垫)
+    *   **3.2 Threat Model: Challenges and Vulnerabilities in Current Systems**
+        *   3.2.1 User Experience Deficiencies (用户体验极差 - HCI/TAM视角概述)
+            *   *(HCI详细分析移至 3.3)*
+        *   3.2.2 Asset Fragmentation (资产碎片化)
+        *   3.2.3 Operational Inefficiency (效率低下 - 开户/购买/跨链等)
+        *   3.2.4 Limitations of Existing Countermeasures (现有对策的局限性 - 可用性、认知负荷、接受度)
+        *   3.2.5 Risks of Centralized Gas Payment Services (中心化Gas支付系统的问题)
+            *   3.2.5.1 Security and Privacy Concerns (三明治攻击、数据泄露)
+            *   3.2.5.2 Manipulation and Censorship Risks (操纵和审查风险)
+            *   3.2.5.3 Monopoly and Cost Issues (垄断和成本问题)
+            *   *(中心化风险的详细分析移至 3.4)*
+    *   **3.3 Usability Challenges in Gas Payment (深入HCI分析)**
+        *   3.3.1 Ease of Learning & Complex On-Chain Transaction Process (链上交易的复杂流程)
+        *   3.3.2 Gulf of Execution (执行鸿沟)
+        *   3.3.3 Gulf of Evaluation (评估鸿沟)
+        *   3.3.4 Efficiency Issues (效率问题 - 细节)
+        *   3.3.5 Error Rate and Lack of Fault Tolerance (错误率和误操作)
+        *   3.3.6 Memorization Difficulties (可记忆性)
+        *   3.3.7 User Satisfaction Issues (满意度)
+        *   3.3.8 Lack of Supporting Tools and Infrastructure (工具问题)
+        *   3.3.9 High Cognitive Load (技术性概念认知负荷)
+        *   3.3.10 Low Perceived Ease of Use (感知易用性)
+    *   **3.4 Risk Analysis of Centralized Gas Payment Services (中心化风险详述)**
+        *   3.4.1 High Integration Costs and Low Adoption Rate (集成成本高、普及率不高)
+        *   3.4.2 Transaction Manipulation Risks (抢跑, MEV, 三明治攻击)
+        *   3.4.3 Privacy Leakage Risks (用户交易隐私泄露)
+        *   3.4.4 Legal and Regulatory Compliance Risks (地区法律审查)
+        *   3.4.5 Limited Gas Token Support (不接受自定义ERC20)
+        *   3.4.6 Long-term Monopoly and Cost Inflation Risks (垄断与成本上升)
+
+**4. The Proposed System Overview: SuperPaymaster (对应模仿结构第4部分)**
+    *   **4.1 Requirements Specification for a Decentralized Gas Payment System**
+        *   (将“拟议系统的关键要求”作为本节内容)
+        *   4.1.1 Security Requirements (安全)
+        *   4.1.2 Privacy Requirements (隐私)
+        *   4.1.3 Availability Requirements (可用)
+        *   4.1.4 Usability Requirements (易用)
+        *   4.1.5 Cost-Effectiveness Requirements (低成本)
+        *   4.1.6 Efficiency Requirements (高效)
+        *   4.1.7 Competitiveness Requirements (竞争)
+        *   4.1.8 Openness and Permissionless Requirements (开放开源无许可)
+    *   **4.2 Overview of the SuperPaymaster System**
+        *   (简要介绍SuperPaymaster的目标、核心理念和主要组成部分)
+    *   **4.3 Involved Actors and Roles**
+        *   (列出并描述参与者：普通用户，社区，节点运营方，Bundler/RPC，第三方Swap等)
+
+**5. SuperPaymaster Ecosystem and Trust Model (对应模仿结构第5部分)**
+    *   **5.1 Key Components of the SuperPaymaster Ecosystem**
+        *   5.1.1 Standardized Decentralized Service System (SDSS)
+            *   5.1.1.1 ENS for Service Discovery (ENS)
+            *   5.1.1.2 Node Registration Mechanism (节点注册机制)
+            *   5.1.1.3 Dynamic Routing Discovery (动态路由发现)
+        *   5.1.2 Competitive Quoting Mechanism (竞争式报价)
+        *   5.1.3 Self-Custodial AirAccount Integration (自托管的AirAccount)
+            *   5.1.3.1 Fingerprint-based Security (只需按指纹)
+            *   5.1.3.2 Enhanced Contract Account Features (社交恢复等)
+        *   5.1.4 Open Community Model (开放的社区模式)
+            *   5.1.4.1 Permissionless Community Tokens (OpenPNTs)
+            *   5.1.4.2 NFT-based Gas Cards (Cards/OpenCards/无感Gas支付)
+            *   5.1.4.3 Task-for-Points Mechanism (任务换积分)
+    *   **5.2 SuperPaymaster Trust Model**
+        *   5.2.1 Decentralized Node Mechanism (去中心化节点机制 - BLS门限签名等)
+        *   5.2.2 Reputation Mechanism (Reputation机制 - 成功率、响应速率、Stake)
+        *   5.2.3 On-Chain Contract Verification (链上合约验证 - 签名、支付、利润分配)
+        *   5.2.4 Community Governance Model (社区治理模型)
+        *   5.2.5 Trust Flywheel (信任模型：低价+Stake -> 成功率 -> 用户 -> 可持续 -> 声誉)
+
+**6. SuperPaymaster Process Workflow (对应模仿结构第6部分)**
+    *   **6.1 Core Gas Sponsorship Workflow (System Perspective)**
+        *   (详细描述“SuperPaymaster 系统流程”中的步骤，并配时序图)
+        *   Step 1: User Account Registration (AirAccount)
+        *   Step 2: Transaction Construction and Encryption (用户与dApp交互, 指纹加密)
+        *   Step 3: Gas Price Quoting via SDSS (dApp调用SDSS询价)
+        *   Step 4: Paymaster Selection and Signature Acquisition (选择节点, 获取签名)
+        *   Step 5: Transaction Submission (提交到Bundler/RPC)
+        *   Step 6: On-Chain Verification (EntryPoint验证, Paymaster合约验证)
+        *   Step 7: Pre-Payment Actions (Paymaster合约扣款/计算)
+        *   Step 8: Post-Payment Actions (退款, 记账, Reputation更新)
+        *   Step 9: Contract Execution (执行交易核心逻辑)
+        *   Step 10: Transaction Confirmation (打包, 广播, 确认)
+        *   Step 11: Post-Pay Settlement (Paymaster节点结算)
+    *   **6.2 Typical User Interaction Workflow (User Perspective)**
+        *   (详细描述“SuperPaymaster用户典型交互流程”中的步骤)
+        *   Step 1: Accessing Integrated dApp
+        *   Step 2: Account Registration (Google/Email/EOA with Fingerprint/Signature)
+        *   Step 3: Receiving Community NFT/Points (假设)
+        *   Step 4: Earning Points (Optional: Task Completion)
+        *   Step 5: Initiating Transaction (e.g., Purchase, Transfer, Claim)
+        *   Step 6: Seamless Gas Payment (Using Points/NFT Card)
+        *   Step 7: Viewing Transaction Records
+        *   Step 8: Checking Balances and History
+
+**7. Implementation (Proof of Concept - PoC) (对应模仿结构第7部分)**
+    *   **7.1 Technology Stack**
+        *   (列出Tauri, Rust, Go, Next.js, Solidity, AirAccount, Supabase等)
+    *   **7.2 System Setup and Configuration**
+        *   (描述测试环境，如Sepolia测试网)
+    *   **7.3 Smart Contract Development**
+        *   (SuperPaymaster合约, ENS API合约等关键合约的实现要点)
+    *   **7.4 Backend Service Implementation**
+        *   (Go服务实现要点：ENS管理, 节点验证, 签名服务)
+    *   **7.5 Frontend and Desktop Application Development**
+        *   (Next.js Web交互, Tauri/Rust节点管理应用实现要点)
+    *   **7.6 AirAccount Integration**
+        *   (描述如何集成AirAccount的账户生成和二次加密功能)
+    *   **7.7 SDSS Implementation Details**
+        *   (ENS注册、节点发现、API接口的具体实现方式)
+    *   **7.8 OpenCards/OpenPNTs Implementation**
+        *   (NFT/SBT合约实现，积分管理逻辑)
+
+**8. Discussion, Related Work and Comparison, Conclusion (对应模仿结构第8部分)**
+    *   **8.1 Discussion**
+        *   8.1.1 Addressing Usability Challenges (讨论SuperPaymaster如何解决易用性问题)
+            *   ENS for Dynamic Service Access
+            *   Reputation Mechanism for Success Rate Guarantee
+            *   Competitive Quoting for Cost Reduction
+            *   Community Tokens for Low/Negative Cost
+            *   NFT Cards for Seamless Payment
+        *   8.1.2 Security Enhancements (讨论安全增强措施：二次加密, TEE)
+        *   **8.1.3 Implications of Findings** (对评估结果的解读 - *需结合第5章评估结果*)
+        *   **8.1.4 Limitations** (研究的局限性 - *可从第6章移部分过来*)
+    *   **8.2 Related Work and Comparison**
+        *   (将SuperPaymaster与现有方案在安全、隐私、成本、开放性、易用性、效率等方面进行详细比较，突出优势和差异)
+    *   **8.3 Conclusion**
+        *   (总结研究的主要贡献和发现)
+    *   **8.4 Future Work**
+        *   (提出未来的研究方向)
+
+**(后续为 Acknowledgments 和 References)**
+
+---
+
+请您审阅这个拆分后的结构。它旨在保持您内容的完整性，同时提供一个更符合模仿论文逻辑层次的框架。您可以根据您的写作进展和侧重点，进一步调整这些标题和内容分布。
