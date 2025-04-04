@@ -757,7 +757,7 @@ Main part final version
             *   2.2.5.2 Manipulation and Censorship Risks (操纵和审查风险)
             *   2.2.5.3 Monopoly and Cost Issues (垄断和成本问题)
             *   *(中心化风险的详细分析移至 3.4)*
-#### 2.3 Usability Challenges in Gas Payment (深入HCI分析)
+### 2.3 Usability Challenges in Gas Payment (深入HCI分析)
         *   2.3.1 Ease of Learning & Complex On-Chain Transaction Process (链上交易的复杂流程)
         *   2.3.2 Gulf of Execution (执行鸿沟)
         *   2.3.3 Gulf of Evaluation (评估鸿沟)
@@ -768,7 +768,7 @@ Main part final version
         *   2.3.8 Lack of Supporting Tools and Infrastructure (工具问题)
         *   2.3.9 High Cognitive Load (技术性概念认知负荷)
         *   2.3.10 Low Perceived Ease of Use (感知易用性)
-#### 2.4 Risk Analysis of Centralized Gas Payment Services (中心化风险详述)
+### 2.4 Risk Analysis of Centralized Gas Payment Services (中心化风险详述)
         *   2.4.1 High Integration Costs and Low Adoption Rate (集成成本高、普及率不高)
         *   2.4.2 Transaction Manipulation Risks (抢跑, MEV, 三明治攻击)
         *   2.4.3 Privacy Leakage Risks (用户交易隐私泄露)
