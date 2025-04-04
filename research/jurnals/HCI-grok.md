@@ -1,0 +1,79 @@
+### 关键要点
+- 研究表明，全球超过3亿人使用区块链技术，近90%的企业已部分采用区块链。
+- 2025年2月，Ethereum的平均交易费用为0.41美元，显示费用降低可能减少采用障碍。
+- MetaMask钱包在2025年有约2100万至3000万月活跃用户，反映账户管理使用情况，但界面复杂性可能影响用户体验。
+- 证据倾向于表明，高燃气费和账户管理难度是区块链大规模普及的障碍，特别是在HCI（人机交互）和TAM（技术接受模型）视角下。
+
+### 区块链使用情况
+区块链使用数据显示，全球约有3亿人使用区块链技术，其中亚洲用户最多，达到1.6亿（[Demandsage](https://www.demandsage.com/blockchain-statistics/)）。近90%的企业报告已部署区块链技术，86%的人认为区块链能提升业务价值。这些数据表明区块链在企业和个人中的广泛接受，但采用率仍相对较低（全球仅约5%的人口使用）。
+
+### 燃气费支付
+燃气费是区块链交易的成本，尤其在Ethereum网络上显著。2025年2月，Ethereum的平均交易费用降至0.41美元，低于两年前的15.21美元，显示网络效率提升（[CoinLaw](https://coinlaw.io/ethereum-gas-fees-statistics/)）。历史数据表明，2021年5月燃气费曾高达196美元，特别是在NFT和DeFi热潮期间，这可能阻止了新用户采用。2025年的降低可能缓解这一障碍，但波动性仍是一个问题。
+
+### 账户相关使用
+账户管理主要涉及加密钱包的使用，如MetaMask。2025年，MetaMask的月活跃用户数估计在2100万至3000万之间，反映了其普及度（[EarthWeb](https://earthweb.com/blog/metamask-statistics/)，[Blockworks](https://blockworks.co/news/metamask-monthly-active-users-blockaid)）。然而，研究显示，初次用户常面临钱包界面复杂、密钥管理困难等问题，这些HCI挑战可能阻碍采用。
+
+---
+
+### 调研笔记：区块链使用、燃气费支付和账户管理的权威数据与初步分析
+
+本文旨在为基于HCI（人机交互）和TAM（技术接受模型）视角分析区块链大规模普及障碍的博士论文提供权威数据和初步分析。以下是详细调研结果，涵盖区块链使用、燃气费支付和账户相关使用的统计数据及相关洞察，供学术引用和分析。
+
+#### 区块链使用情况的统计数据
+区块链使用的全球数据表明，其采用率正在增长，但仍面临普及障碍。根据[Demandsage](https://www.demandsage.com/blockchain-statistics/)的2025年报告，全球超过3亿人使用区块链技术，其中亚洲用户约1.6亿，欧洲次之，Oceania仅约100万用户。这反映了区域差异可能影响采用。企业层面，近90%的被调查企业报告已部署区块链技术，86%的人认为区块链能增强业务，显示企业对技术的信心（[Demandsage](https://www.demandsage.com/blockchain-statistics/)）。然而，全球仅约5%的人口使用区块链，表明个人采用率较低，可能与技术复杂性或认知度有关。
+
+[Statista](https://www.statista.com/topics/5122/blockchain/)提供了更多细节，如NFT用户的季度数据（2020-2024年）和DeFi的总锁仓价值（TVL，截至2024年9月25日），这些数据可用于分析特定应用场景的采用趋势。此外，[CompTIA](https://connect.comptia.org/blog/blockchain-statistics)指出，区块链在资产管理和反洗钱领域的应用增长，但缺乏监管框架可能限制采用。
+
+#### 燃气费支付的统计数据与分析
+燃气费是区块链交易的核心成本，尤其在Ethereum网络上。2025年2月，Ethereum的平均交易费用为0.41美元，较两年前的15.21美元显著下降，显示网络效率提升和Layer 2解决方案（如zkEVMs）的潜在影响（[CoinLaw](https://coinlaw.io/ethereum-gas-fees-statistics/)）。历史数据进一步揭示，2017年平均燃气费仅0.20美元，2018年ICO热潮使费用升至1.20美元，2020年DeFi热潮推高至14美元，2021年5月甚至达到196美元（[CoinLaw](https://coinlaw.io/ethereum-gas-fees-statistics/)）。这些波动可能对用户行为产生显著影响，特别是对新用户和高频交易者。
+
+[Ethereum.org](https://ethereum.org/en/developers/docs/gas/)提供了技术概述，说明燃气费由燃气使用量和单位燃气价格决定，无论交易成功与否均需支付。这表明高燃气费可能成为TAM中的“感知使用难度”障碍，尤其在网络拥堵时。此外，EIP-4844（proto-danksharding）预计2024年推出，可能降低15-25%的燃气费，进一步缓解成本压力（[CoinLaw](https://coinlaw.io/ethereum-gas-fees-statistics/)）。
+
+以下为燃气费统计的汇总表：
+
+| **时间**       | **平均交易费用（美元）** | **备注**                                      |
+|----------------|--------------------------|-----------------------------------------------|
+| 2017年         | 0.20                    | 初期低费用，网络使用有限                       |
+| 2018年         | 1.20                    | ICO热潮推高费用                               |
+| 2020年         | 14.00                   | DeFi热潮导致网络拥堵                          |
+| 2021年5月      | 196.00                  | NFT和DeFi高峰，费用创纪录                     |
+| 2022年         | 4.50                    | Merge和Layer 2缓解拥堵                        |
+| 2025年2月      | 0.41                    | 显著下降，显示效率提升                        |
+
+#### 账户相关使用的统计数据与分析
+账户管理主要涉及加密钱包的使用，MetaMask是Ethereum生态系统中的领先非托管钱包。根据[EarthWeb](https://earthweb.com/blog/metamask-statistics/)，2025年MetaMask的月活跃用户超过2100万，显示其广泛使用。而[Blockworks](https://blockworks.co/news/metamask-monthly-active-users-blockaid)报告2025年1月达3000万，存在一定数据差异，可能反映统计方法不同。区域分布上，[Statista](https://www.statista.com/statistics/1324849/metamask-app-downloads-by-country/)显示，印度和美国下载量最高，2024年其他国家如巴西、印度尼西亚也有增长。
+
+HCI研究表明，初次用户常面临钱包界面复杂、密钥管理困难等问题。例如，[ArXiv](https://arxiv.org/abs/2204.10857)的一篇系统文献综述识别了六个主题，包括加密货币钱包的交互设计挑战，指出界面不友好可能阻止采用。另一篇研究（[ArXiv](https://arxiv.org/abs/2001.00079)）基于TAM扩展模型，分析了区块链系统易用性对采用意图的影响，发现系统质量和感知享受显著影响感知有用性，但易用性对有用性的影响不显著。这为HCI和TAM分析提供了理论基础。
+
+以下为账户相关统计的汇总表：
+
+| **指标**               | **数据**               | **来源**                                              |
+|-------------------------|------------------------|-------------------------------------------------------|
+| MetaMask月活跃用户（2025） | 2100万至3000万        | [EarthWeb](https://earthweb.com/blog/metamask-statistics/)，[Blockworks](https://blockworks.co/news/metamask-monthly-active-users-blockaid) |
+| 全球区块链钱包用户      | 超过8500万            | [Demandsage](https://www.demandsage.com/blockchain-statistics/) |
+| 区域下载量最高国家      | 印度、美国            | [Statista](https://www.statista.com/statistics/1324849/metamask-app-downloads-by-country/) |
+
+#### HCI和TAM视角下的初步分析
+从HCI视角，账户管理的界面复杂性和安全性（如私钥丢失）是主要障碍。研究显示，即使像MetaMask这样的流行钱包，初次用户也常因界面设计不适合新手而放弃（[ArXiv](https://arxiv.org/abs/2204.10857)）。从TAM视角，高燃气费可能降低感知易用性，特别是在费用波动大的时期，而账户管理的复杂性可能影响感知有用性。例如，[ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0148296322004386)研究发现，技术波动性和监管不确定性显著影响区块链采用意图。
+
+此外，[PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11471537/)在建筑行业的研究显示，感知易用性是采用区块链的关键预测因素，这与燃气费和账户管理的挑战相符。结合上述数据，建议进一步研究用户调查和可用性测试，以量化这些障碍对采用的影响。
+
+#### 意外发现：区域和行业差异
+一个意外的发现是，区块链采用在区域和行业间差异显著。例如，亚洲的采用率最高（1.6亿用户），而Oceania仅100万（[Demandsage](https://www.demandsage.com/blockchain-statistics/)）。行业层面，金融服务（如DeFi）和NFT领域推动了使用增长，但建筑行业的研究显示监管和标准化问题仍是障碍（[PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11471537/)）。这些差异为跨文化和跨行业分析提供了新视角。
+
+#### 结论与建议
+以上数据为HCI和TAM视角下的区块链普及障碍分析提供了坚实基础。建议结合用户行为研究，进一步探讨燃气费波动对新用户的影响，以及如何通过界面优化降低账户管理的认知负荷。引用这些权威数据可增强论文的学术严谨性。
+
+---
+
+### 关键引用
+- Blockchain Statistics 2025 — Adoption Rate, & Users [Demandsage](https://www.demandsage.com/blockchain-statistics/)
+- Ethereum Gas Fees Statistics 2025 • CoinLaw [CoinLaw](https://coinlaw.io/ethereum-gas-fees-statistics/)
+- Metamask Statistics 2025: How Many People use Metamask? [EarthWeb](https://earthweb.com/blog/metamask-statistics/)
+- Blockchain - statistics & facts | Statista [Statista](https://www.statista.com/statistics/1324849/metamask-app-downloads-by-country/)
+- Blockchain Statistics: Top Stats, Facts and Trends| Industry Trends | CompTIA [CompTIA](https://connect.comptia.org/blog/blockchain-statistics)
+- User Acceptance of Usable Blockchain-Based Research Data Sharing System: An Extended TAM Based Study [ArXiv](https://arxiv.org/abs/2001.00079)
+- Blockchain and Cryptocurrency in Human Computer Interaction: A Systematic Literature Review and Research Agenda [ArXiv](https://arxiv.org/abs/2204.10857)
+- Beyond the hype: A TAM-based analysis of blockchain adoption drivers in construction industry [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC11471537/)
+- High interest, low adoption. A mixed-method investigation into the factors influencing organisational adoption of blockchain technology [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0148296322004386)
+- Ethereum gas and fees: technical overview [Ethereum.org](https://ethereum.org/en/developers/docs/gas/)

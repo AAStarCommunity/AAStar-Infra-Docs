@@ -8,6 +8,7 @@
 这个理论比较粗糙，但简单说，帮助个体提升福祉。
 而我个人寄希望于区块链来帮助实现这个研究和探索，整体的研究兴趣，也是围绕我的核心方向：如何让普通个体获得自由。
 
+
 ## My Research Interests
 作为研究者/researcher，持续关注的研究领域很多，包括但不限于：
 - 区块链账户和安全/Blockchain Account and Security
@@ -96,5 +97,8 @@ SocialRecovery和相关研究，解决社交恢复的安全性和隐私以及UX�
 - 怀念丢失了半年的AAStar每周在线分享记录
 
 merge this doc to open build docs.aastar.io
+## Who am I？
+Jason Jiao，以太坊建设者，AAStar贡献者，前普朗克主理人，前教育科技公司P9和研发负责人，前某东汽车M3技术管理角色。
+目前在筹建Mycelium Protocol，建立践行协议的MushroomDAO。
 
     

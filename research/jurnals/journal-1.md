@@ -740,3 +740,176 @@ I will follow above as template to write my journal paper main part.
 ---
 
 请您审阅这个拆分后的结构。它旨在保持您内容的完整性，同时提供一个更符合模仿论文逻辑层次的框架。您可以根据您的写作进展和侧重点，进一步调整这些标题和内容分布。
+
+Main part final version
+## 2. Gas Payment System and Threat Model 6/1000
+### 2.1 Essential Services of Gas Payment System
+        *   2.1.1 Necessity of Gas Payment (Gas的必要性问题)
+        *   2.1.2 Current Gas Payment Workflow (概述现有支付流程，为后续HCI分析铺垫)
+### 2.2 Threat Model: Challenges and Vulnerabilities in Current Systems
+        *   2.2.1 User Experience Deficiencies (用户体验极差 - HCI/TAM视角概述)
+            *   *(HCI详细分析移至 3.3)*
+        *   2.2.2 Asset Fragmentation (资产碎片化)
+        *   2.2.3 Operational Inefficiency (效率低下 - 开户/购买/跨链等)
+        *   2.2.4 Limitations of Existing Countermeasures (现有对策的局限性 - 可用性、认知负荷、接受度)
+        *   2.2.5 Risks of Centralized Gas Payment Services (中心化Gas支付系统的问题)
+            *   2.2.5.1 Security and Privacy Concerns (三明治攻击、数据泄露)
+            *   2.2.5.2 Manipulation and Censorship Risks (操纵和审查风险)
+            *   2.2.5.3 Monopoly and Cost Issues (垄断和成本问题)
+            *   *(中心化风险的详细分析移至 3.4)*
+#### 2.3 Usability Challenges in Gas Payment (深入HCI分析)
+        *   2.3.1 Ease of Learning & Complex On-Chain Transaction Process (链上交易的复杂流程)
+        *   2.3.2 Gulf of Execution (执行鸿沟)
+        *   2.3.3 Gulf of Evaluation (评估鸿沟)
+        *   2.3.4 Efficiency Issues (效率问题 - 细节)
+        *   2.3.5 Error Rate and Lack of Fault Tolerance (错误率和误操作)
+        *   2.3.6 Memorization Difficulties (可记忆性)
+        *   2.3.7 User Satisfaction Issues (满意度)
+        *   2.3.8 Lack of Supporting Tools and Infrastructure (工具问题)
+        *   2.3.9 High Cognitive Load (技术性概念认知负荷)
+        *   2.3.10 Low Perceived Ease of Use (感知易用性)
+#### 2.4 Risk Analysis of Centralized Gas Payment Services (中心化风险详述)
+        *   2.4.1 High Integration Costs and Low Adoption Rate (集成成本高、普及率不高)
+        *   2.4.2 Transaction Manipulation Risks (抢跑, MEV, 三明治攻击)
+        *   2.4.3 Privacy Leakage Risks (用户交易隐私泄露)
+        *   2.4.4 Legal and Regulatory Compliance Risks (地区法律审查)
+        *   2.4.5 Limited Gas Token Support (不接受自定义ERC20)
+        *   2.4.6 Long-term Monopoly and Cost Inflation Risks (垄断与成本上升)
+
+## 2.Analysis of Current Gas Payment Systems and Associated Challenges
+This section delves into the foundational aspects of gas payment mechanisms within EVM-compatible blockchains, outlines the typical user workflow, and critically examines the multifaceted challenges and vulnerabilities inherent in current systems, including usability barriers and the specific risks associated with centralized solutions.
+
+### 2.1 The Gas Payment Mechanism
+#### 2.1.1 Necessity of Gas Payment
+The requirement for users to pay 'gas' for transactions is fundamental to the operation and security of public, permissionless blockchains like Ethereum. Due to the Turing-completeness of the Ethereum Virtual Machine (EVM), which allows for arbitrary computation, a mechanism is needed to prevent infinite loops and denial-of-service (DoS) attacks that could exhaust network resources (Wood, 2014, rev. 2022). Gas acts as a computational metering unit, assigning a cost to each operational step executed by the EVM. By requiring payment for computation, the gas mechanism ensures the sustainable use of shared public resources, prevents network abuse, and incentivizes validators (miners/stakers) to process transactions and secure the network (Buterin et al., 2015).
+
+#### 2.1.2 Current Gas Payment Workflow
+Executing a transaction on current blockchain systems typically involves a complex, multi-step workflow for the user, even before the core on-chain interaction occurs. A user often needs to: (1) Create an account on a centralized exchange (CEX); (2) Complete Know Your Customer (KYC) verification; (3) Purchase the blockchain's native token (e.g., ETH for Ethereum) using fiat currency; (4) Set up a self-custodial wallet (e.g., MetaMask); (5) Transfer the native token from the CEX to their wallet, incurring withdrawal fees; (6) Potentially perform cross-chain swaps or bridging if operating on a different network or requiring specific tokens, adding further complexity and cost; (7) Finally, initiate the desired transaction (e.g., interacting with a dApp), requiring careful setting of gas parameters (gas limit, gas price/priority fee) and signing with their private key. This intricate process serves as a significant initial barrier, particularly for non-technical users.
+
+### 2.2 Challenges and Vulnerabilities in Current Systems
+Existing gas payment systems suffer from a confluence of issues that impede usability, efficiency, and trust.
+
+#### 2.2.1 User Experience Deficiencies
+From both HCI and TAM perspectives, current systems exhibit numerous characteristics detrimental to user adoption. They often impose a high cognitive load, demonstrate poor usability across multiple dimensions (detailed in Section 2.3), involve significant direct and indirect costs, necessitate convoluted multi-step processes, offer a subpar overall experience, and raise security concerns for average users [Citation needed - General HCI/Usability reference, e.g., Nielsen Norman Group articles].
+
+#### 2.2.2 Asset Fragmentation
+The proliferation of diverse blockchain networks (Layer 1s and Layer 2s) necessitates users holding small balances of different native tokens (e.g., ETH on Ethereum mainnet, ETH on Arbitrum, MATIC on Polygon) simply to pay gas fees on each respective chain. This fragmentation increases user overhead, complicates asset management, and adds significant cumulative costs associated with acquiring and managing these disparate gas tokens [Citation needed - Analysis of multi-chain user costs].
+
+#### 2.2.3 Operational Inefficiency
+The multi-step workflow described in 2.1.2 is inherently inefficient. Each step, from CEX onboarding and KYC delays to cross-chain bridge waiting times and transaction confirmation latency, introduces friction and consumes considerable user time and effort. This inefficiency persists even for experienced users, hindering fluid interaction with dApps (Pacheco et al., 2023).
+
+#### 2.2.4 Limitations of Existing Countermeasures
+While various solutions aim to improve the gas payment experience (e.g., gas estimation tools, early forms of gas abstraction), they often provide only partial relief. Many still require users to possess native tokens or grapple with underlying complexities. Even emerging standards like ERC-4337, while promising, face adoption hurdles and do not inherently solve all usability or centralization issues in their current implementations [Citation needed - Review of gas optimization techniques/early AA].
+
+#### 2.2.5 Risks of Centralized Gas Payment Services (Overview)
+The rise of centralized services offering gas sponsorship (Paymasters) or transaction relaying (Bundlers), often associated with ERC-4337 implementations, introduces a new set of risks that potentially undermine blockchain's core principles. These include security vulnerabilities (e.g., facilitating MEV extraction like sandwich attacks, data breaches), the potential for transaction manipulation or censorship based on the provider's policies or jurisdiction, and the risk of market monopolies leading to inflated costs and reduced innovation (Daian et al., 2020). A detailed analysis follows in Section 2.4.
+
+(End of Draft for Section 2 - Approximately 850 words)
+
+Note on Citations:
+
+I've included APA-style citations for foundational concepts where readily available (Wood, 2014; Buterin et al., 2015; Pacheco et al., 2023; Daian et al., 2020).
+
+I've added placeholders like [Citation needed - ...] where specific studies or authoritative sources would strengthen the claims (e.g., on multi-chain costs, general usability principles, reviews of existing solutions). You would need to find appropriate references for these points during your writing process.
+
+The Sweller citation for cognitive load is relevant but might fit better directly within section 2.3.9 when discussing cognitive load specifically.
+
+## 3. The Proposed System Overview: SuperPaymaster 8/1500
+### 3.1 Requirements Specification for a Decentralized Gas Payment System
+        *   (将“拟议系统的关键要求”作为本节内容)
+        *   3.1.1 Security Requirements (安全)
+        *   3.1.2 Privacy Requirements (隐私)
+        *   3.1.3 Availability Requirements (可用)
+        *   3.1.4 Usability Requirements (易用)
+        *   3.1.5 Cost-Effectiveness Requirements (低成本)
+        *   3.1.6 Efficiency Requirements (高效)
+        *   3.1.7 Competitiveness Requirements (竞争)
+        *   3.1.8 Openness and Permissionless Requirements (开放开源无许可)
+### 3.2 Overview of the SuperPaymaster System
+        *   (简要介绍SuperPaymaster的目标、核心理念和主要组成部分)
+### 3.3 Involved Actors and Roles
+        *   (列出并描述参与者：普通用户，社区，节点运营方，Bundler/RPC，第三方Swap等)
+### 3.4 SDSS (Standardized Decentralized Service System) Overview
+        *   (简要介绍SDSS的目标、核心理念和主要组成部分)
+        *   3.4.1 ENS for Service Discovery (ENS)
+        *   3.4.2 Node Registration Mechanism (节点注册机制)
+        *   3.4.3 Dynamic Routing Discovery (动态路由发现)  
+#### 3.5 Key Components of the SuperPaymaster Ecosystem
+        *   4.1.1 Standardized Decentralized Service System (SDSS)
+            *   4.1.1.1 ENS for Service Discovery (ENS)
+            *   4.1.1.2 Node Registration Mechanism (节点注册机制)
+            *   4.1.1.3 Dynamic Routing Discovery (动态路由发现)
+        *   4.1.2 Competitive Quoting Mechanism (竞争式报价)
+        *   4.1.3 Self-Custodial AirAccount Integration (自托管的AirAccount)
+            *   4.1.3.1 Fingerprint-based Security (只需按指纹)
+            *   4.1.3.2 Enhanced Contract Account Features (社交恢复等)
+        *   4.1.4 Open Community Model (开放的社区模式)
+            *   4.1.4.1 Permissionless Community Tokens (OpenPNTs)
+            *   4.1.4.2 NFT-based Gas Cards (Cards/OpenCards/无感Gas支付)
+            *   4.1.4.3 Task-for-Points Mechanism (任务换积分)
+#### 3.6 SuperPaymaster Trust Model
+        *   4.2.1 Decentralized Node Mechanism (去中心化节点机制 - BLS门限签名等)
+        *   4.2.2 Reputation Mechanism (Reputation机制 - 成功率、响应速率、Stake)
+        *   4.2.3 On-Chain Contract Verification (链上合约验证 - 签名、支付、利润分配)
+        *   4.2.4 Community Governance Model (社区治理模型)
+        *   4.2.5 Trust Flywheel (信任模型：低价+Stake -> 成功率 -> 用户 -> 可持续 -> 声誉)
+
+#### 3.7 Core Gas Sponsorship Workflow (System Perspective)
+        *   (详细描述“SuperPaymaster 系统流程”中的步骤，并配时序图)
+        *   Step 1: User Account Registration (AirAccount)
+        *   Step 2: Transaction Construction and Encryption (用户与dApp交互, 指纹加密)
+        *   Step 3: Gas Price Quoting via SDSS (dApp调用SDSS询价)
+        *   Step 4: Paymaster Selection and Signature Acquisition (选择节点, 获取签名)
+        *   Step 5: Transaction Submission (提交到Bundler/RPC)
+        *   Step 6: On-Chain Verification (EntryPoint验证, Paymaster合约验证)
+        *   Step 7: Pre-Payment Actions (Paymaster合约扣款/计算)
+        *   Step 8: Post-Payment Actions (退款, 记账, Reputation更新)
+        *   Step 9: Contract Execution (执行交易核心逻辑)
+        *   Step 10: Transaction Confirmation (打包, 广播, 确认)
+        *   Step 11: Post-Pay Settlement (Paymaster节点结算)
+#### 3.8 Typical User Interaction Workflow (User Perspective)
+        *   (详细描述“SuperPaymaster用户典型交互流程”中的步骤)
+        *   Step 1: Accessing Integrated dApp
+        *   Step 2: Account Registration (Google/Email/EOA with Fingerprint/Signature)
+        *   Step 3: Receiving Community NFT/Points (假设)
+        *   Step 4: Earning Points (Optional: Task Completion)
+        *   Step 5: Initiating Transaction (e.g., Purchase, Transfer, Claim)
+        *   Step 6: Seamless Gas Payment (Using Points/NFT Card)
+        *   Step 7: Viewing Transaction Records
+        *   Step 8: Checking Balances and History      
+
+## 4. Implementation (Proof of Concept - PoC) 5/1500
+### 4.1 Technology Stack
+        *   (列出Tauri, Rust, Go, Next.js, Solidity, AirAccount, Supabase等)
+### 4.2 System Setup and Configuration
+        *   (描述测试环境，如Sepolia测试网)
+### 4.3 Smart Contract Development
+        *   (SuperPaymaster合约, ENS API合约等关键合约的实现要点)
+### 4.4 Backend Service Implementation
+        *   (Go服务实现要点：ENS管理, 节点验证, 签名服务)
+### 4.5 Frontend and Desktop Application Development
+        *   (Next.js Web交互, Tauri/Rust节点管理应用实现要点)
+### 4.6 AirAccount Integration
+        *   (描述如何集成AirAccount的账户生成和二次加密功能)
+### 4.7 SDSS Implementation Details
+        *   (ENS注册、节点发现、API接口的具体实现方式)
+### 4.8 OpenCards/OpenPNTs Implementation
+        *   (NFT/SBT合约实现，积分管理逻辑)
+
+## 5. Discussion
+        *   5.1 Addressing Usability Challenges (讨论SuperPaymaster如何解决易用性问题)
+            *   ENS for Dynamic Service Access
+            *   Reputation Mechanism for Success Rate Guarantee
+            *   Competitive Quoting for Cost Reduction
+            *   Community Tokens for Low/Negative Cost
+            *   NFT Cards for Seamless Payment
+        *   5.2 Security Enhancements (讨论安全增强措施：二次加密, TEE)
+        *   5.3 Implications of Findings (对评估结果的解读 - *需结合第5章评估结果*)
+        *   5.2.4 Limitations (研究的局限性 - *可从第6章移部分过来*)
+
+## 6 Related Work and Comparison
+        *   (将SuperPaymaster与现有方案在安全、隐私、成本、开放性、易用性、效率等方面进行详细比较，突出优势和差异)
+        
+## 7 Conclusion
+        *   7.1 (总结研究的主要贡献和发现)
+        *   7.2 Future Work 提出未来的研究方向
