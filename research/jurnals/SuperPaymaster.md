@@ -7,7 +7,7 @@ SuperPaymaster: A Decentralized Ethereum Gas Payment System Based on ERC4337 and
 ## Authors
 
 Huifeng Jiao, Dr. Anukul Tamprasirt,Dr. Nathapon Udomlertsakul, AAStar Team
-International College of Digital Innovation, Chiang Mai University, Chiang Mai, 50200, Thailand1
+International College of Digital Innovation, Chiang Mai University, Chiang Mai, 50200, Thailand
 E-mail: huifeng_jiao@cmu.ac.th, nathapon.u@icdi.cmu.ac.th, anukul@innova.or.th, hi@aastar.io
 
 ## Keywords
@@ -88,7 +88,7 @@ The multi-step workflow described in 2.1.2 is inherently inefficient. Each step,
 While various solutions aim to improve the gas payment experience (e.g., gas estimation tools, early forms of gas abstraction), they often provide only partial relief. Many still require users to possess native tokens or grapple with underlying complexities. Even emerging standards like ERC-4337, while promising, face adoption hurdles and do not inherently solve all usability or centralization issues in their current implementations [Citation needed - Review of gas optimization techniques/early AA].
 
 #### 2.2.5 Risks of Centralized Gas Payment Services (Overview)
-The rise of centralized services offering gas sponsorship (Paymasters) or transaction relaying (Bundlers), often associated with ERC-4337 implementations, introduces a new set of risks that potentially undermine blockchain's core principles. These include security vulnerabilities (e.g., facilitating MEV extraction like sandwich attacks, data breaches), the potential for transaction manipulation or censorship based on the provider's policies or jurisdiction, and the risk of market monopolies leading to inflated costs and reduced innovation (Daian et al., 2020). A detailed analysis follows in Section 2.4. It is a joke for anyone can get a permissionless account by ECDSA on blockchain, but you must buy gas token with your ID card, bank card and centralized credentials to launch decentralized transactions.
+The rise of centralized services offering gas sponsorship (Paymasters) or transaction relaying (Bundlers), often associated with ERC-4337 implementations, introduces a new set of risks that potentially undermine blockchain's core principles. These include security vulnerabilities (e.g., facilitating MEV extraction like sandwich attacks, data breaches), the potential for transaction manipulation or censorship based on the provider's policies or jurisdiction, and the risk of market monopolies leading to inflated costs and reduced innovation (Daian et al., 2020). A detailed analysis follows in Section 2.4. It's paradoxical that permissionless accounts, readily created via ECDSA, often necessitate centralized identification and payment methods to acquire gas for initiating decentralized transactions.
 
 ### 2.3 Usability Challenges in Gas Payment: An HCI Perspective
 The fundamental challenges outlined previously manifest as significant usability barriers when analyzed through the lens of Human-Computer Interaction (HCI).
@@ -177,7 +177,7 @@ The system must foster a competitive market among gas service providers to preve
 The system should be built on open-source principles, allowing anyone to participate as a user, developer, or service node operator without requiring permission from a central authority. This includes the ability for communities to issue their own gas tokens (OpenPNTs) and for nodes to freely join the SuperPaymaster network.
 
 ### 3.2 Overview of the SuperPaymaster System
-SuperPaymaster is proposed as a decentralized gas payment (sponsorship) system built upon the ERC-4337 standard and leveraging a novel Standardized Decentralized Service System (SDSS) architecture. Its core objective is to create an open, competitive, and resilient marketplace for gas sponsorship, addressing the cost, usability, efficiency, and centralization issues prevalent in existing solutions. Key motivations include providing a single, consistent Paymaster address across chains for developer convenience and unifying the staking mechanism for all participating sponsors (LPs/Nodes) to enhance overall system trust and reliability. It facilitates various user-friendly payment models, including single transaction, pre-paid "Gas Tanks," and potentially post-paid credit systems (PostPayCard), all managed within a decentralized framework.
+SuperPaymaster is proposed as a decentralized gas payment (sponsorship) system built upon the ERC-4337 standard and leveraging a novel Standardized Decentralized Service System (SDSS) architecture. Its core objective is to create an open, competitive, and resilient marketplace for gas sponsorship, addressing the cost, usability, efficiency, and centralization issues prevalent in existing solutions. Key motivations include providing a single, consistent Paymaster address across chains for developer convenience and unifying the staking mechanism for all participating sponsors (LPs/Nodes) to enhance overall system trust and reliability. It facilitates various user-friendly payment models, including Gas Card/OpenCards, pre-paid "Gas Tanks," and potentially post-paid credit systems (PostPayCard), all managed within a decentralized framework.
 
 ### 3.3 Involved Actors and Roles
 The SuperPaymaster ecosystem involves several key actors:
@@ -431,18 +431,30 @@ sequenceDiagram
     dApp-->>User: Display OpenPNTs balance, OpenCard status, and transaction history
 ```
 
-
-
 ## 4. Implementation (Proof of Concept - PoC) 5/1500
 ### 4.1 Technology Stack
         Foundry/Solidity来完成核心的SuperPaymaster合约和相关的ENS二次解析、PNTs发行、OpenCard NFT发行、节点注册等合约。
         Next.js/React/Node.js以及众多的库和框架，来完成所有交互界面。
-        Tauri，完成所有桌面应用的打包和发布，包括Windows、MacOS、Linux, iOS, Android and Web， N1、N2节点。
-        Go/Rust，分别完成后端服务和节点管理应用。Rust配合Tauri进行底层服务开发，N3节点。
-        Docker/Supabase，用于部署和管理后端服务，N4，N5节点。
+        Tauri，完成所有桌面应用的打包和发布，包括Windows、MacOS、Linux, iOS, Android and Web， N1（普通客户端）、N2（提供Web服务）节点。
+        Go/Rust，分别完成后端服务和节点管理应用。Rust配合Tauri进行底层服务开发，N3（提供后端服务）和N4（提供TEE服务）节点。
+        Docker/Supabase，用于部署和管理后端服务，N5（独立运行Docker+N3/N4）节点。
+        P2P网络在PoC阶段不引入，一般某个节点充当调度节点。
         AirAccount API，提供账户的全生命周期API。
+          - Tauri 和 Rust 用于开发桌面应用和节点账户管理服务。
+	- Go语言用于开发后台服务，例如ENS管理、节点验证和节点签名等服务。
+    - Next.js 作为 Web交互开发框架,支持SSR/SSG。
+    - Solidity 用于智能合约开发（SuperPaymaster合约和ENS API）。
+    - AirAccount 用于区块链账户生成管理和二次加密技术。
+    - EIP4337/EIP721,用于支持EVM合约账户和NFT/SBT。
+    - Ethereum Sepolia 测试网络上的智能合约用于部署和执行合约行为（链上验证和交易）。
+	- Supabase 用于存储和管理用户数据，包括PostgreSQL数据库、图片CDN和通知服务等。
 ### 4.2 System Setup and Configuration
-        *   (描述测试环境，如Sepolia测试网)
+        网络和通信结构：基于总分方式+备份协调者+去中心节点架构
+        合约部署环境：Layer1和Layer2
+        Stake和Reputation机制：
+        关机风险：具备一定算力、网络资源和Stake的节点作为协调节点+（备份节点+自动候选协调者+局部最优解）+超过10个节点作为计算节点+DePIN成本足够低
+        客户端验证版本为Tauri+Node.js，支持Web、MacOS、Android
+        N3到N5，需要有TEE芯片，且初期只支持Intel SGX
 ### 4.3 Smart Contract Development
         *   (SuperPaymaster合约, ENS API合约等关键合约的实现要点)
 ### 4.4 Backend Service Implementation
