@@ -6,7 +6,7 @@ SuperPaymaster: A Decentralized Ethereum Gas Payment System Based on ERC4337 and
 
 ## Authors
 
-Huifeng Jiao, Dr. Anukul Tamprasirt,Dr. Nathapon Udomlertsakul, AAStar Team
+Huifeng Jiao, Dr. Nathapon Udomlertsakul, Dr. Anukul Tamprasirt, AAStar Team
 International College of Digital Innovation, Chiang Mai University, Chiang Mai, 50200, Thailand
 E-mail: huifeng_jiao@cmu.ac.th, nathapon.u@icdi.cmu.ac.th, anukul@innova.or.th, hi@aastar.io
 
@@ -432,29 +432,17 @@ sequenceDiagram
 ```
 
 ## 4. Implementation (Proof of Concept - PoC) 5/1500
+This section provides an overview of the technical implementation of the SuperPaymaster, aiming to address the high costs, complex workflows, and inefficiencies of traditional gas payment mechanisms. By leveraging SDSS and relevant open protocols, the system mitigates and eliminates risks associated with centralized services, such as price monopolies and censorship vulnerabilities.
 ### 4.1 Technology Stack
-        Foundry/Solidity来完成核心的SuperPaymaster合约和相关的ENS二次解析、PNTs发行、OpenCard NFT发行、节点注册等合约。
-        Next.js/React/Node.js以及众多的库和框架，来完成所有交互界面。
-        Tauri，完成所有桌面应用的打包和发布，包括Windows、MacOS、Linux, iOS, Android and Web， N1（普通客户端）、N2（提供Web服务）节点。
-        Go/Rust，分别完成后端服务和节点管理应用。Rust配合Tauri进行底层服务开发，N3（提供后端服务）和N4（提供TEE服务）节点。
-        Docker/Supabase，用于部署和管理后端服务，N5（独立运行Docker+N3/N4）节点。
-        P2P网络在PoC阶段不引入，一般某个节点充当调度节点。
-        AirAccount API，提供账户的全生命周期API。
-          - Tauri 和 Rust 用于开发桌面应用和节点账户管理服务。
-	- Go语言用于开发后台服务，例如ENS管理、节点验证和节点签名等服务。
-    - Next.js 作为 Web交互开发框架,支持SSR/SSG。
-    - Solidity 用于智能合约开发（SuperPaymaster合约和ENS API）。
-    - AirAccount 用于区块链账户生成管理和二次加密技术。
-    - EIP4337/EIP721,用于支持EVM合约账户和NFT/SBT。
-    - Ethereum Sepolia 测试网络上的智能合约用于部署和执行合约行为（链上验证和交易）。
-	- Supabase 用于存储和管理用户数据，包括PostgreSQL数据库、图片CDN和通知服务等。
+This section outlines the implementation specifics of the SuperPaymaster platform, addressing details ranging from configuration to smart contract deployment, node management, and user interface development. It highlights the components used to enhance system performance and ensure interoperability. We employed a variety of tools and frameworks to implement the SuperPaymaster Proof of Concept (PoC). Specifically, Foundry and Solidity were utilized to develop the core SuperPaymaster contract along with related contracts for ENS secondary resolution, PNTs issuance, OpenCard NFT issuance, and node registration. Next.js, React, and Node.js, combined with numerous libraries and frameworks, were used to build all interactive interfaces, delivering a dynamic and efficient user experience. Tauri was employed to package and distribute desktop applications across Windows, MacOS, Linux, iOS, Android, and Web platforms, supporting N1 (standard client) and N2 (web service provider) nodes. Go and Rust were used to develop backend services and node management applications, respectively, with Rust paired with Tauri for low-level service development, supporting N3 (backend service provider) and N4 (TEE service provider) nodes. Docker and Supabase facilitated the deployment and management of backend services, enabling N5 (standalone Docker+N3/N4) nodes. At the PoC stage, a P2P network was not introduced; instead, a designated node served as the scheduler. Additionally, the AirAccount API provided full lifecycle management for accounts. We also utilized Raspberry Pi 5B/16G as compute nodes to run the SuperPaymaster backend services and ENS-related APIs, ensuring the system’s scalability and stability.
+
 ### 4.2 System Setup and Configuration
-        网络和通信结构：基于总分方式+备份协调者+去中心节点架构
-        合约部署环境：Layer1和Layer2
-        Stake和Reputation机制：
-        关机风险：具备一定算力、网络资源和Stake的节点作为协调节点+（备份节点+自动候选协调者+局部最优解）+超过10个节点作为计算节点+DePIN成本足够低
-        客户端验证版本为Tauri+Node.js，支持Web、MacOS、Android
-        N3到N5，需要有TEE芯片，且初期只支持Intel SGX
+We need to setup AirAccount, SuperPaymaster Nodes and ENS Configuration, to get a decentralized account with gas sponsorship ability, and a basic config for SuperPaymaster PNTs, Cards and more parameters to pay your gas seemlessly. Also we need create cross-chain ENS API name for node registry to get decentralized invoking.
+#### AirAccount Configuration
+Email support 
+#### SuperPaymaster Node Configuration
+#### ENS Configuration
+
 ### 4.3 Smart Contract Development
         合约是系统的关键部分，通过不可篡改的代码，来保障验证Gas支付签名、支付Gas、抵扣合理的PNTs、合理的分配PNTs收入、计算Reputation（成功率）和Slash等等。
         本次完成SuperPaymaster核心部分，更多设计参考[SuperPaymaster Design 0.12](../solutions/SuperPaymaster_v0.12.pdf)

@@ -717,6 +717,32 @@ I will follow above as template to write my journal paper main part.
     *   **7.8 OpenCards/OpenPNTs Implementation**
         *   (NFT/SBT合约实现，积分管理逻辑)
 
+
+        Foundry/Solidity来完成核心的SuperPaymaster合约和相关的ENS二次解析、PNTs发行、OpenCard NFT发行、节点注册等合约。
+        Next.js/React/Node.js以及众多的库和框架，来完成所有交互界面。
+        Tauri，完成所有桌面应用的打包和发布，包括Windows、MacOS、Linux, iOS, Android and Web， N1（普通客户端）、N2（提供Web服务）节点。
+        Go/Rust，分别完成后端服务和节点管理应用。Rust配合Tauri进行底层服务开发，N3（提供后端服务）和N4（提供TEE服务）节点。
+        Docker/Supabase，用于部署和管理后端服务，N5（独立运行Docker+N3/N4）节点。
+        P2P网络在PoC阶段不引入，一般某个节点充当调度节点。
+        AirAccount API，提供账户的全生命周期API。
+          - Tauri 和 Rust 用于开发桌面应用和节点账户管理服务。
+	- Go语言用于开发后台服务，例如ENS管理、节点验证和节点签名等服务。
+    - Next.js 作为 Web交互开发框架,支持SSR(Server Side Rendering)/SSG(Static Site Generation)。
+    - Solidity 用于智能合约开发（SuperPaymaster合约和ENS API）。
+    - AirAccount 用于区块链账户生成管理和二次加密技术。
+    - EIP4337/EIP721,用于支持EVM合约账户和NFT/SBT。
+    - Ethereum Sepolia 测试网络上的智能合约用于部署和执行合约行为（链上验证和交易）。
+	- Supabase 用于存储和管理用户数据，包括PostgreSQL数据库、图片CDN和通知服务等。
+        另外我们使用了Raspberry Pi 5B/16G作为计算节点，用于运行SuperPaymaster后台服务和ENS等API服务。
+本节概述了SuperPaymaster平台的实现细节，涉及从配置到智能合约部署、节点管理和用户交互界面的各个方面，重点介绍了用于提升系统性能和确保互操作性的组件。我们使用了一系列工具和框架来实现SuperPaymaster的概念验证（PoC）。具体来说，我们采用了Foundry和Solidity来开发核心的SuperPaymaster合约以及相关的ENS二次解析、PNTs发行、OpenCard NFT发行和节点注册等智能合约。Next.js、React和Node.js结合多个库和框架，用于构建所有交互界面，提供动态且高效的用户体验。Tauri被用于打包和发布桌面应用程序，支持Windows、MacOS、Linux、iOS、Android和Web平台，覆盖N1（普通客户端）和N2（提供Web服务）节点。Go和Rust分别用于开发后端服务和节点管理应用，其中Rust配合Tauri实现底层服务开发，支持N3（提供后端服务）和N4（提供TEE服务）节点。Docker和Supabase被用于部署和管理后端服务，支持N5（独立运行Docker+N3/N4）节点。在PoC阶段，我们暂不引入P2P网络，而是由某个节点充当调度节点。此外，AirAccount API提供了账户全生命周期管理功能。我们还在Raspberry Pi 5B/16G计算节点上运行SuperPaymaster后台服务和ENS相关API，以确保系统的可扩展性和稳定性。  
+
+网络和通信结构：基于总分方式+备份协调者+去中心节点架构
+合约部署环境：Layer1和Layer2
+Stake和Reputation机制：
+关机风险：具备一定算力、网络资源和Stake的节点作为协调节点+（备份节点+自动候选协调者+局部最优解）+超过10个节点作为计算节点+DePIN成本足够低
+客户端验证版本为Tauri+Node.js，支持Web、MacOS、Android
+N3到N5，需要有TEE芯片，且初期只支持Intel SGX
+
 **8. Discussion, Related Work and Comparison, Conclusion (对应模仿结构第8部分)**
     *   **8.1 Discussion**
         *   8.1.1 Addressing Usability Challenges (讨论SuperPaymaster如何解决易用性问题)

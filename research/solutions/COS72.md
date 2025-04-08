@@ -14,7 +14,7 @@ We create an AI tool, a simple web page based community dApps builder based on C
 ## Community running
 + No centralized computing
 + Running based on SDSS/Rain Computing
-+ Welcome to join with your own Raspberry Pi5
++ Welcome to join with your own Raspberry Pi 5
 ## Features plus
 + Free ENS
 + Free limited quota
