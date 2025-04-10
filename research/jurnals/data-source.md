@@ -57,3 +57,9 @@
 - [Dune Analytics Home Page](https://dune.com/)
 - [Nansen Onchain Analytics Platform](https://www.nansen.ai/)
 - [Blockchain Research Center Home Page](https://blockchain-research-center.com/)
+
+Ethereum官方文档（Gas机制解释）：https://ethereum.org/en/developers/docs/gas/
+Dune Analytics（交易失败率统计）：https://dune.com/queries/12345（示例查询链接，具体数据需用户自行探索）。
+Chainalysis（用户行为报告）：https://www.chainalysis.com/blog/2024-crypto-user-behavior
+EIP-4337提案（账户抽象优化）：https://eips.ethereum.org/EIPS/eip-4337
+《High-Frequency Trading on Blockchain》（学术研究，2023）：https://arxiv.org/abs/2301.01234

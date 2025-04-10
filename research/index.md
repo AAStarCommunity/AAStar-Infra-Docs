@@ -1,5 +1,5 @@
 # Research Introduction
-
+We are researching on the topic of blockchain account and security, will explore the dApps and more in the future.
 ## Documents 
 tree -L 3
 .

@@ -1,5 +1,6 @@
 # AI dApps Builder: COS72
 We create an AI tool, a simple web page based community dApps builder based on COS72 and Optimism Layer2.
+It built on top of Mycelium Protocol/Mushroom Protocol, which will be the dApps Layer3.
 
 ## Just answer questions
 + Friendly to all

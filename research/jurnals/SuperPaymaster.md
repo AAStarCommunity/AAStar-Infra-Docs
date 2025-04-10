@@ -22,44 +22,16 @@ E-mail: huifeng_jiao@cmu.ac.th, nathapon.u@icdi.cmu.ac.th, anukul@innova.or.th, 
 - We conduct a proof of concept (PoC) to demonstrate the advantages of the proposed system over existing solutions and to outline potential future research directions.
 
 ## Abstract
-This research utilizing principles of Human-Computer Interaction (HCI) and account abstraction technologies such as ERC-4337, we aim to optimize the gas payment experience on Ethereum (and EVM-compatible chains) to reduce costs, enhance user experience (UX), and improve system efficiency, ultimately facilitating the large-scale adoption of blockchain technology.
-This paper introduces SuperPaymaster, a novel blockchain transaction Gas payment system leveraging Account Abstraction (ERC-4337) and a Standardized Decentralized Service System (SDSS) to address critical challenges in current Gas payment solutions, including high costs, poor user experiences, and inefficiencies. Existing blockchain Gas payment mechanisms are user-unfriendly and inconvenient, and while ERC-4337 offers partial improvements, issues like centralization, price monopolization, and censorship persist. Furthermore, current approaches lack fully decentralized Gas payment services, evidenced by limited ERC-20 token acceptance, the absence of permissionless Gas sponsorship, uneven service coverage, and complex application integration. SuperPaymaster proposes an open-source, decentralized framework enabling anyone to register and operate their Paymaster service via the SuperPaymaster contract, accepting any ERC-20 token for Gas. Integrating the AirAccount contract and SuperPaymaster service, underpinned by SDSS utilizing ENS and P2P networks, this system aims to significantly reduce the high time costs of cross-chain transactions and holding Gas tokens. It also seeks to streamline cumbersome procedures, enhance inefficient operations, and improve the poor user experience of existing tools. A Proof-of-Concept (PoC) validates the system's feasibility and advantages.
-207 words
+Current blockchain gas payments impede widespread adoption due to high costs, complexity, and poor user experience (UX) rooted in HCI challenges. While Account Abstraction (ERC-4337) offers potential, centralized implementations often introduce critical risks like censorship and price manipulation, undermining decentralization.
+This paper introduces SuperPaymaster, a novel gas payment system using ERC-4337 and a Standardized Decentralized Service System (SDSS) to create a truly decentralized, competitive, and user-friendly ecosystem. It directly tackles high costs, usability friction, and centralization vulnerabilities. SuperPaymaster provides an open-source framework enabling permissionless Paymaster nodes via a unified contract, fostering competition, supporting diverse ERC-20 gas tokens, and integrating with secure accounts like AirAccount via SDSS for streamlined, secure interactions.
+By optimizing gas payments through decentralization and enhanced UX, SuperPaymaster aims to significantly lower entry barriers, improve blockchain interaction efficiency and usability, and ultimately accelerate Web3 adoption. A Proof-of-Concept (PoC) demonstrates the system's feasibility and potential advantages.
 
 ##  1. Introduction
+Blockchain technology, underpinning a digital asset market valued in the trillions [Optional: Add citation], offers transformative potential for societal collaboration. However, its path to mass adoption is significantly hindered by user experience challenges, particularly surrounding the fundamental process of paying transaction fees, or "gas," on networks like Ethereum. As established by the Technology Acceptance Model (TAM) and Human-Computer Interaction (HCI) principles, perceived ease of use is critical for adoption [Optional: Add citation for TAM/HCI]. Currently, interacting with blockchain often involves a cumbersome and costly gas payment process, presenting substantial barriers related to usability, efficiency, and cost [Optional: Cite ultrasound.money for scale]. Users, especially newcomers, confront a steep learning curve involving numerous complex steps (often 10-15, including exchange interactions, KYC, wallet setup, and cross-chain transfers), high cognitive load, and opaque procedures [Briefly reference HCI gulfs]. These usability hurdles act as significant deterrents, preventing many from engaging with and realizing the value of decentralized applications (dApps).
 
-<!-- 1.1 Background and Motivation -->
+The emergence of Account Abstraction (AA), particularly Ethereum's ERC-4337 standard [Optional: Add citation for ERC-4337], offers promising mechanisms like gas sponsorship (Paymasters) to alleviate some of these burdens. However, current implementations leveraging AA frequently introduce new centralization risks. Many rely on a limited number of centralized entities acting as Bundlers or Paymasters. This approach reintroduces vulnerabilities such as transaction censorship, potential price manipulation by dominant players, and single points of failure, directly conflicting with blockchain's core decentralization principles [Optional: Add citation on centralization risks/MEV]. Furthermore, practical limitations persist in these centralized solutions, including restricted support for diverse ERC-20 tokens as gas payment, lack of truly permissionless service operation, and complex integration efforts for dApp developers, leaving a critical gap for a genuinely decentralized alternative.
 
-Blockchain technology represents a significant technological advancement with the potential to reshape societal collaboration and digital asset exchange, evidenced by its multi-trillion dollar market capitalization [Optional: Add citation]. However, realizing its full potential for mass adoption hinges critically on user acceptance and experience. Drawing upon the Technology Acceptance Model (TAM) and principles of Human-Computer Interaction (HCI), user adoption is largely determined by perceived usefulness and perceived ease of use [Optional: Add citation for TAM/HCI]. While blockchain offers novel functionalities (usefulness), significant barriers related to usability, efficiency, and cost currently hinder its perceived ease of use and overall user experience, impeding broader acceptance.
-
-<!-- 1.2 Problem Statement -->
-
-A primary obstacle within the current blockchain ecosystem, particularly on platforms like Ethereum and EVM-compatible chains, is the cumbersome and costly process of paying transaction fees, commonly known as "gas". Daily gas consumption on Ethereum alone highlights the economic scale of this friction point [Optional: Cite ultrasound.money]. Users, especially newcomers, face a steep learning curve involving complex concepts, multi-step procedures (often exceeding 10-15 steps involving exchanges, cross-chain transfers, and wallet management), high and volatile costs, and a generally poor user experience. More like high cognitive load, execution/evaluation gulfs in HCI and TAM theory. These usability challenges act as significant deterrents, preventing users from fully engaging with and realizing the value of decentralized applications (dApps).
-
-<!-- 1.3 Research Gap -->
-
-While solutions like Ethereum's Account Abstraction standard (ERC-4337) aim to alleviate some of these issues by enabling features like gas sponsorship (Paymasters), current implementations often fall short [Optional: Add citation for ERC-4337]. Existing approaches frequently rely on centralized relayers (Bundlers) and Paymasters, reintroducing risks of price manipulation, censorship, and single points of failure – counteracting blockchain's core decentralization ethos. Furthermore, limitations persist regarding the flexible use of diverse ERC-20 tokens for gas payments, permissionless service operation, and seamless integration for dApp developers. A critical gap exists in providing a truly decentralized, competitive, and user-friendly gas payment infrastructure that aligns with the open, community-driven nature of blockchain.
-
-<!-- 1.4 Research Objectives and Questions -->
-
-This research aims to design, implement, and evaluate a novel system, SuperPaymaster, built upon ERC-4337 and a proposed Standardized Decentralized Service System (SDSS) architecture, to address the identified gaps in blockchain gas payments. The primary objectives are to significantly reduce gas payment costs through competition, enhance user experience by simplifying interactions (e.g., via NFT-based "Gas Cards" and seamless payments), improve operational efficiency, and mitigate the risks associated with centralized intermediaries.
-
-This study is guided by the following key research questions:
-
-How can a decentralized gas payment system based on ERC-4337 and SDSS effectively reduce transaction costs and improve user experience compared to existing methods?
-
-What mechanisms within this system can mitigate the risks of price monopoly and censorship inherent in centralized gas payment solutions?
-
-How feasible and efficient is the proposed SuperPaymaster system and SDSS architecture in a practical implementation?
-
-<!-- 1.5 Significance and Scope -->
-
-This research contributes a novel, decentralized gas payment solution (SuperPaymaster) and a foundational service architecture (SDSS), offering a viable alternative to centralized approaches. By integrating HCI principles, it directly tackles the usability barriers hindering blockchain adoption, potentially making dApps significantly more accessible. The study's significance lies in its potential to foster a more open, competitive, and user-centric gas payment ecosystem, aligning with blockchain's core values. The scope is focused on gas payment optimization within EVM-compatible chains using ERC-4337, evaluating cost, user experience (usability, cognitive load), efficiency, and decentralization aspects. It does not cover broader account management or non-gas-related security issues.
-
-<!-- 1.6 Brief Methodology and Structure -->
-
-Employing a design science approach, this research involves: (1) Designing the SuperPaymaster system and SDSS architecture. (2) Implementing key components like competitive quoting, NFT Gas Cards, and permissionless node registration. (3) Developing and evaluating a Proof-of-Concept (PoC) on the Ethereum Sepolia testnet using Solidity, Go, and TypeScript. The remainder of this paper is organized as follows: Section 2 reviews related work. Section 3 details the proposed system design. Section 4 presents the evaluation methodology and results. Section 5 discusses the findings and limitations. Section 6 concludes the paper and outlines future work.
-
+In this paper, we introduce SuperPaymaster, a gas payment system based on ERC-4337 Account Abstraction and a novel Standardized Decentralized Service System (SDSS) architecture. SuperPaymaster is designed to foster a truly decentralized, competitive, and user-friendly ecosystem for managing transaction fees. It directly addresses the limitations of previous approaches by enabling an open-source framework where anyone can permissionlessly operate Paymaster nodes. These nodes register via SDSS (using ENS for discovery) and compete to offer gas sponsorship, facilitating lower costs and accepting a wide variety of community-issued or standard ERC-20 tokens. Integration with user-centric wallets like AirAccount further enhances usability and security, aiming for a seamless payment experience. By decentralizing the paymaster layer and prioritizing user experience, SuperPaymaster seeks to significantly lower entry barriers, improve interaction efficiency, and accelerate the broader adoption of Web3 technologies. A Proof-of-Concept (PoC) is presented to demonstrate the system's feasibility.
 
 
 ## 2. Analysis of Current Gas Payment Systems and Associated Challenges
@@ -146,7 +118,7 @@ The market for centralized relayers and paymasters shows signs of concentration 
 
 
 
-## 3. The Proposed System Overview: SuperPaymaster 1450
+## 3. The Proposed System Overview: SuperPaymaster
 Addressing the multifaceted challenges detailed in Section 2 requires a paradigm shift from centralized or simplistic gas payment solutions towards a decentralized, user-centric, and competitive ecosystem. This section introduces SuperPaymaster, a novel system designed to achieve this vision. We first outline the critical requirements for such a system, then provide an overview of SuperPaymaster's architecture and actors, delve into its core components including the foundational Standardized Decentralized Service System (SDSS), explain its trust model, and finally, detail its operational workflows from both system and user perspectives.
 
 ### 3.1 Requirements Specification for a Decentralized Gas Payment System
@@ -177,7 +149,7 @@ The system must foster a competitive market among gas service providers to preve
 The system should be built on open-source principles, allowing anyone to participate as a user, developer, or service node operator without requiring permission from a central authority. This includes the ability for communities to issue their own gas tokens (OpenPNTs) and for nodes to freely join the SuperPaymaster network.
 
 ### 3.2 Overview of the SuperPaymaster System
-SuperPaymaster is proposed as a decentralized gas payment (sponsorship) system built upon the ERC-4337 standard and leveraging a novel Standardized Decentralized Service System (SDSS) architecture. Its core objective is to create an open, competitive, and resilient marketplace for gas sponsorship, addressing the cost, usability, efficiency, and centralization issues prevalent in existing solutions. Key motivations include providing a single, consistent Paymaster address across chains for developer convenience and unifying the staking mechanism for all participating sponsors (LPs/Nodes) to enhance overall system trust and reliability. It facilitates various user-friendly payment models, including Gas Card/OpenCards, pre-paid "Gas Tanks," and potentially post-paid credit systems (PostPayCard), all managed within a decentralized framework.
+SuperPaymaster is proposed as a decentralized gas payment (sponsorship) system built upon the ERC-4337 standard and leveraging a novel Standardized Decentralized Service System (SDSS) architecture. Its core objective is to create an open, competitive, and resilient marketplace for gas sponsorship, addressing the cost, usability, efficiency, and centralization issues prevalent in existing solutions. Key motivations include providing a single, consistent Paymaster address across chains for developer convenience and unifying the staking mechanism for all participating sponsors (LPs/Nodes) to enhance overall system trust and reliability. It facilitates various user-friendly payment models addressing the cost and usability issues, including Gas Card/OpenCards, pre-paid "Gas Tanks," and potentially post-paid credit systems (PostPayCard), all managed within a decentralized framework.
 
 ### 3.3 Involved Actors and Roles
 The SuperPaymaster ecosystem involves several key actors:
@@ -208,7 +180,15 @@ SDSS serves as the foundational communication and discovery layer for decentrali
 ### 3.5 Key Components of the SuperPaymaster Ecosystem
 SuperPaymaster integrates several key technological and economic components:
 
-#### 3.5.1 Standardized Decentralized Service System (SDSS)
+#### 3.5.1 SuperPaymaster Core
+We build SuperPaymaster based on ERC4337, so there are 4 parts:
+
+1. SuperPaymaster contract: stake the ETH and verify the signature, pay the gas sponsorship.
+2. SuperPaymaster server: handle the user operation and sign a signature after or post deduce your ERC20 token balance.
+3. SuperPaymaster API: response to some quota and routing services directly or push to pool timely.
+4. SuperPaymaster client/dApps: initiate the user operation and submit it to bunlder after get the gas sponsorship signature from SuperPaymaster server.
+
+#### 3.5.2 Standardized Decentralized Service System (SDSS)
 
 ##### 3.5.1.1 ENS for Service Discovery
 Utilizes the Ethereum Name Service (ENS) for human-readable naming (e.g., node.ethpaymaster.eth) and service endpoint resolution. Nodes register their API endpoints and metadata within ENS records, allowing dApps and users to discover available service providers dynamically. This acts as a decentralized alternative to centralized service registries.
@@ -219,23 +199,24 @@ Provides a secure, potentially anonymous (pseudonymous via blockchain address) o
 ##### 3.5.1.3 Dynamic Routing Discovery
 Enables callers (dApps) to find suitable service nodes by querying the ENS-based registry or potentially through cached lists maintained by clients (like AirAccount). This allows for load balancing, failover, and selection based on criteria like reputation or proximity.
 
-#### 3.5.2 Competitive Quoting Mechanism
+#### 3.5.3 Competitive Quoting Mechanism
 Instead of relying on a single provider's price, dApps can query multiple registered SuperPaymaster nodes (discovered via SDSS) for gas sponsorship quotes for a specific transaction. The dApp can then select the most favorable quote (e.g., lowest cost, highest reputation node), fostering price competition and preventing monopolies.
+They(dApps) can fetch by a single API from SDSS service to get multiple quotes and access API URLs. All quotes will be updated by SDSS.
 
-#### 3.5.3 Self-Custodial AirAccount Integration
-Leverages the AirAccount system for user account management.
+#### 3.5.4 Self-Custodial AirAccount Integration
+Leverages the AirAccount system for user account management. All user operations will be signed by AirAccount with users' biometric(finger print or pass key). And the on-chain account contract will verify every transaction with BLS12-381/EIP2537 and secp256k1/ECDSA.
 
-##### 3.5.3.1 Fingerprint-based Security
+##### 3.5.4.1 Fingerprint-based Security
 Employs device-based biometrics (e.g., fingerprint via Secure Enclave/TEE, FIDO2/Passkey standards) for transaction signing and potentially second-factor authentication (D2FA), enhancing security beyond traditional private keys while improving usability ("Just press fingerprint").
 
 ##### 3.5.3.2 Enhanced Contract Account Features
 Inherits benefits of smart contract accounts managed by AirAccount, such as social recovery, account migration ("moving house"), spending limits, and potentially will execution features.
 
-#### 3.5.4 Open Community Model
-Empowers communities and users with flexible gas payment options.
+#### 3.5.5 Open Community Model
+Empowers communities and users with flexible gas payment options. The communities can run a Community Node permissionless. The users can get guidance from communities and gas sponsorship options.
 
 ##### 3.5.4.1 Permissionless Community Tokens (OpenPNTs)
-Allows any community to issue its own ERC-20 compliant token (Points/PNTs) and configure SuperPaymaster nodes to accept these tokens for gas payments, fostering local economies.
+Allows any community to issue its own ERC-20 compliant token (Points/PNTs) and configure SuperPaymaster nodes to accept these tokens for gas payments, fostering community activities.
 
 ##### 3.5.4.2 NFT-based Gas Cards (Cards/OpenCards)
 Implements gas payment allowances or pre-paid balances using NFTs or SBTs (potentially conforming to ERC-721 or EIP-6551 for token-bound accounts). Users holding specific Cards can have their gas fees automatically paid (up to certain limits or using associated PNT balances), creating a seamless "gasless" experience.
