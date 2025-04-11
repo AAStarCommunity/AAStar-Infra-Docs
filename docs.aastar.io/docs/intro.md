@@ -2,13 +2,20 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Quick Intro
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's discover **AAStar in less than 5 minutes**.
+- AAStar is a community focused on the Account Abstraction and the development of dApps.
+- We provide a set of tools and services to help you successfully build and deploy dApps on the Ethereum.
+- SuperPaymaster: A decentralized gas payment system based on ERC-4337 and Account Abstraction.
+- AirAccount: A user-friendly semi-custody crypto account that supports AirPaymaster.
+- COS72: a framework to help dApps build on SDSS/Rain Computing solution with multi-platform support.
+- CometENS: a simple and secure ENS registry for decentralized service/API identity.
+- More...
 
 ## Getting Started
 
-Get started by **creating a new site**.
+Get started by **creating a new dApp**.
 
 Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
 
@@ -17,9 +24,9 @@ Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new
 - [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
   - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
 
-## Generate a new site
+## Generate a new dApp
 
-Generate a new Docusaurus site using the **classic template**.
+Generate a new dApp using the **classic template**.
 
 The classic template will automatically be added to your project after you run the command:
 
@@ -31,7 +38,7 @@ You can type this command into Command Prompt, Powershell, Terminal, or any othe
 
 The command also installs all necessary dependencies you need to run Docusaurus.
 
-## Start your site
+## Start your dApp
 
 Run the development server:
 
@@ -40,8 +47,4 @@ cd my-website
 npm run start
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+## Deploy your dApp

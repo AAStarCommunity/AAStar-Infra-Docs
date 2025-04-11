@@ -176,7 +176,7 @@ Services that may be integrated to facilitate real-time conversion between vario
 ### 3.4 SDSS (Standardized Decentralized Service System) Overview
 SDSS serves as the foundational communication and discovery layer for decentralized services within the SuperPaymaster ecosystem. It aims to provide a secure, transparent, and user-friendly architecture for basic decentralized computing services, moving beyond reliance on traditional centralized cloud infrastructure. Its core components facilitate the discovery and interaction with permissionlessly operated service nodes.
 
-(Note: Detailed SDSS components are elaborated in 3.5.1)
+(Note: Detailed SDSS components are elaborated in 3.5.2)
 
 ### 3.5 Key Components of the SuperPaymaster Ecosystem
 SuperPaymaster integrates several key technological and economic components:
@@ -191,6 +191,13 @@ We build SuperPaymaster based on ERC4337, so there are 4 parts:
 
 ![](https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202504101315170.png)
 #### 3.5.2 Standardized Decentralized Service System (SDSS)
+SDSS provides the core decentralized service system by 4 different levels nodes:
+1. N0(Node 0) means client developed with Tauri+Node.js for cross platform
+2. N0 can access N1 to N3, based on SDSS provided decentralized routing and computing services.
+3. N1: static file service and ENS resolution API services.
+4. N2: provide TEE+hardware wallet services based on Raspberry Pi 5B on ARM chips.
+5. N3: running a Docker (Supabase service).
+It means any one can run a node in any level: N0, N1, N2, N3 for service or providing service.
 
 ##### 3.5.1.1 ENS for Service Discovery
 Utilizes the Ethereum Name Service (ENS) for human-readable naming (e.g., node.ethpaymaster.eth) and service endpoint resolution. Nodes register their API endpoints and metadata within ENS records, allowing dApps and users to discover available service providers dynamically. This acts as a decentralized alternative to centralized service registries.
@@ -415,44 +422,32 @@ sequenceDiagram
 ```
 
 ## 4. Implementation (Proof of Concept - PoC)
-This section provides an overview of the technical implementation of the SuperPaymaster, aiming to address the high costs, complex workflows, and inefficiencies of traditional gas payment mechanisms. By leveraging SDSS and relevant open protocols, the system mitigates and eliminates risks associated with centralized services, such as price monopolies and censorship vulnerabilities.
+This section details the Proof of Concept (PoC) implementation of the SuperPaymaster platform, covering smart contract development, the Standardized Decentralized Service System (SDSS) backend, node management, and user interface construction. Technological choices focused on enabling core functionalities—decentralized gas sponsorship, competitive quoting, enhanced user experience—and meeting security and interoperability requirements.
+
 ### 4.1 Technology Stack
-This section outlines the implementation specifics of the SuperPaymaster platform, addressing details ranging from configuration to smart contract deployment, node management, and user interface development. It highlights the components used to enhance system performance and ensure interoperability. We employed a variety of tools and frameworks to implement the SuperPaymaster Proof of Concept (PoC). Specifically, Foundry and Solidity were utilized to develop the core SuperPaymaster contract along with related contracts for ENS secondary resolution, PNTs issuance, OpenCard NFT issuance, and node registration. Next.js, React, and Node.js, combined with numerous libraries and frameworks, were used to build all interactive interfaces, delivering a dynamic and efficient user experience. Tauri was employed to package and distribute desktop applications across Windows, MacOS, Linux, iOS, Android, and Web platforms, supporting N1 (standard client) and N2 (web service provider) nodes. Go and Rust were used to develop backend services and node management applications, respectively, with Rust paired with Tauri for low-level service development, supporting N3 (backend service provider) and N4 (TEE service provider) nodes. Docker and Supabase facilitated the deployment and management of backend services, enabling N5 (standalone Docker+N3/N4) nodes. At the PoC stage, a P2P network was not introduced; instead, a designated node served as the scheduler. Additionally, the AirAccount API provided full lifecycle management for accounts. We also utilized Raspberry Pi 5B/16G as compute nodes to run the SuperPaymaster backend services and ENS-related APIs, ensuring the system’s scalability and stability.
+The SuperPaymaster PoC utilized the following tools and frameworks:
+Smart Contracts: Solidity [[Cite Solidity]] within the Foundry [[Cite Foundry]] framework implemented the core SuperPaymaster contract and auxiliary contracts for ENS resolution, OpenPNTs (ERC-20), OpenCards (ERC-721), and node registration.
+User Interfaces: Next.js [[Cite Next.js]] (React [[Cite]], Node.js [[Cite]]) built web frontends.
+Desktop Clients: Tauri [[Cite Tauri]] packaged cross-platform clients (Windows, MacOS, Linux, iOS, Android, Web) supporting N0 user nodes and N1 service nodes.
+Backend Services: Go [[Cite Go]] and Rust [[Cite Rust]] developed backend/node on libp2p; Rust targeted performance-critical components and potential TEE-based services (N2 nodes).
+Deployment & Infrastructure: Docker [[Cite Docker]] provided containerization. A customized Supabase [[Cite Supabase]] instance handled BaaS, database, and storage functionalities (N3 nodes).
+Account Management: The AirAccount API [[Cite AirAccount]] managed user account lifecycles, security, and authentication.
+Hardware Testing (DePIN): Raspberry Pi 5B devices [[Cite Raspberry Pi]] served as representative compute nodes for testing backend components.
+
 
 ### 4.2 System Setup and Configuration
-We need to setup AirAccount, SuperPaymaster Nodes and ENS Configuration, to get a decentralized account with gas sponsorship ability, and a basic config for SuperPaymaster PNTs, Cards and more parameters to pay your gas seemlessly. Also we need create cross-chain ENS API name for node registry to get decentralized invoking.
+We need to setup AirAccount, SuperPaymaster Nodes and CometENS Configuration, to set interaction config with decentralized account supporting gas sponsorship, and a basic config for OpenPNTs, OpenCards and more parameters to pay your gas seemlessly. Also we need create cross-chain CometENS API name for node registry to get decentralized invoking.
 
-#### AirAccount Configuration
-1. 官方申请一个合约账户地址，用来绑定你的SDK支付积分的账户：COS72.org
-2. 需求安装AirAccount SDK,  npm install airaccount
-3. 初始化AirAccount配置：配置你的社区名称，支付积分账户（1申请的地址），
-4. 因为你要使用SuperPaymaster产品，归属于AAStar社区的服务，就需要支付AAStar积分（直接购买）或者OpenPNTs发行的积分。
+### 4.3 Smart Contract Design and Development
+Smart contract is key part of the system, through mutable on-chain code, to ensure verification of gas payment signatures, payment of gas, deduction of reasonable PNTs, reasonable allocation of PNTs income, calculation of reputation (success rate) and Slash etc.
+We only introduce core ability of SuperPaymaster contract, more details can be found in [SuperPaymaster Design 0.13](../solutions/SuperPaymaster_v0.13.pdf).
+1. Stake: Contract balance account stake management
+2. Verify and Pay: Signature verification, payment, record and balance record change
+3. Post Processing: Transaction success post processing: reputation increase
+4. Compensation: Asynchronous transaction status compensation: failed and successful re-check, proof submission and reputation modification (off-chain, call on-chain method)
 
-#### SuperPaymaster Node Configuration
-#### ENS Configuration
-
-### 4.3 Smart Contract Development
-合约是系统的关键部分，通过不可篡改的代码，来保障验证Gas支付签名、支付Gas、抵扣合理的PNTs、合理的分配PNTs收入、计算Reputation（成功率）和Slash扣分等等。
-本次完成SuperPaymaster核心部分，更多设计参考[SuperPaymaster Design 0.12](../solutions/SuperPaymaster_v0.12.pdf)
-[SuperPaymaster Design 0.13](../solutions/SuperPaymaster_v0.13.pdf)
-1. 合约余额账户Stake管理
-2. 交易签名验证、支付、记录和余额记录变动
-3. 交易成功后的post处理：声誉增加
-4. 异步的交易状态补偿：失败和成功的再次check，提交proof和声誉修改（链下，调用链上方法，需要提交凭证且可验证通过）
-#### SuperPaymaster合约
-
-**合约行为**
-以最基础的ERC20 Gas Token，固定价格为例（不需要预言机和外部Swap）：
-1. Entrypoint检查交易是否需要代付Gas，如果有paymasterAndData签名，则调用SuperPaymaster验证签名支付Gas
-2. SuperPaymaster收到来自Entrypoint的支付gas请求，参数携带某个节点的对此交易的签名信息，包括：
-    - 节点公钥
-    - 节点签名
-    - 其他必要参数
-3. SuperPaymaster验证签名返回成功或者失败
-    - 确认此签名是来自于有效的stake节点：节点公钥注册过SuperPaymaster，且stake（存储在SuperPaymaster）足够高，reputation（存储在SuperPaymaster）足够高
-    - 确认签名对此交易有效，且在有效期
-4. Entrypoint收到验证成功后会抵扣SuperPaymaster在EntryPoint的预存的ETH，为交易支付Gas，然后执行后续正常的交易流程，gas payment结束
-5. 支付成功后合约会进行post处理，SuperPaymaster合约可以合理记录节点reputation等行为、计算Reputation（成功率）和Slash等等。
+#### SuperPaymaster Contract
+我们只介绍两个主要函数：stake和verifyAndPay，更多细节可以参考[SuperPaymaster](https://github.com/AAStarCommunity/SuperPaymaster-Contract)。
 #### ENS API合约
 ### 4.4 Backend Service Implementation
 #### 节点注册

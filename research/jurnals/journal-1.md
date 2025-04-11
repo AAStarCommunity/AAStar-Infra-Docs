@@ -820,6 +820,127 @@ Stake和Reputation机制：
 客户端验证版本为Tauri+Node.js，支持Web、MacOS、Android
 N3到N5，需要有TEE芯片，且初期只支持Intel SGX
 
+### 4.1 Technology Stack
+This section outlines the implementation specifics of the SuperPaymaster platform, addressing details ranging from configuration to smart contract deployment, node management, and user interface development. It highlights the components used to enhance system performance and ensure interoperability. We employed a variety of tools and frameworks to implement the SuperPaymaster Proof of Concept (PoC). Specifically, Foundry and Solidity were utilized to develop the core SuperPaymaster contract along with related contracts for ENS secondary resolution, PNTs issuance, OpenCard NFT issuance, and node registration. Next.js(React, Node.js), combined with numerous libraries and frameworks, were used to build all interactive interfaces, delivering a dynamic and efficient user experience. Tauri was employed to package and distribute desktop applications across Windows, MacOS, Linux, iOS, Android, and Web platforms, supporting N1 (standard client) and N2 (web service provider) nodes. Go and Rust were used to develop backend services and node management applications, respectively, with Rust paired with Tauri for low-level service development, supporting N3 (backend service provider) and N4 (TEE service provider) nodes. Docker and Supabase facilitated the deployment and management of backend services, enabling N5 (standalone Docker+N3/N4) nodes. At the PoC stage, a P2P network was not introduced; instead, a designated node served as the scheduler. Additionally, the AirAccount API provided full lifecycle management for accounts. We also utilized Raspberry Pi 5B/16G, a DePIN(Decentralized Physical Infrastructure Network) device, as compute nodes to run the SuperPaymaster backend services and ENS-related APIs, ensuring the system’s scalability and stability.
+
+
+### 4.2 System Setup and Configuration
+We need to setup AirAccount, SuperPaymaster Nodes and CometENS Configuration, to set interaction config with decentralized account for support gas sponsorship, and a basic config for OpenPNTs, OpenCards and more parameters to pay your gas seemlessly. Also we need create cross-chain CometENS API name for node registry to get decentralized invoking.
+
+### 4.3 Smart Contract Development
+合约是系统的关键部分，通过不可篡改的代码，来保障验证Gas支付签名、支付Gas、抵扣合理的PNTs、合理的分配PNTs收入、计算Reputation（成功率）和Slash扣分等等。
+本次完成SuperPaymaster核心部分，更多设计参考[SuperPaymaster Design 0.12](../solutions/SuperPaymaster_v0.12.pdf)
+[SuperPaymaster Design 0.13](../solutions/SuperPaymaster_v0.13.pdf)
+1. 合约余额账户Stake管理
+2. 交易签名验证、支付、记录和余额记录变动
+3. 交易成功后的post处理：声誉增加
+4. 异步的交易状态补偿：失败和成功的再次check，提交proof和声誉修改（链下，调用链上方法，需要提交凭证且可验证通过）
+#### SuperPaymaster合约
+
+**合约行为**
+以最基础的ERC20 Gas Token，固定价格为例（不需要预言机和外部Swap）：
+1. Entrypoint检查交易是否需要代付Gas，如果有paymasterAndData签名，则调用SuperPaymaster验证签名支付Gas
+2. SuperPaymaster收到来自Entrypoint的支付gas请求，参数携带某个节点的对此交易的签名信息，包括：
+    - 节点公钥
+    - 节点签名
+    - 其他必要参数
+3. SuperPaymaster验证签名返回成功或者失败
+    - 确认此签名是来自于有效的stake节点：节点公钥注册过SuperPaymaster，且stake（存储在SuperPaymaster）足够高，reputation（存储在SuperPaymaster）足够高
+    - 确认签名对此交易有效，且在有效期
+4. Entrypoint收到验证成功后会抵扣SuperPaymaster在EntryPoint的预存的ETH，为交易支付Gas，然后执行后续正常的交易流程，gas payment结束
+5. 支付成功后合约会进行post处理，SuperPaymaster合约可以合理记录节点reputation等行为、计算Reputation（成功率）和Slash等等。
+#### ENS API合约
+### 4.4 Backend Service Implementation
+#### 节点注册
+所有后端服务都需要先注册为节点
+1. 生成节点公钥和私钥
+2. 调用node registration API注册节点
+3. 需要stake和一些授权
+节点注册程序由前端（Ether.js）和后端（Go）实现
+未来迁移到TEE中管理秘钥。
+
+#### SuperPaymaster节点后台服务
+1. 节点注册：SuperPaymaster可以验证是否是注册节点，查询stake额度
+2. SuperPaymaster后台服务（节点）收到来自dApps的API询价请求，一般协调节点汇总各个paymaster节点报价：支持ERC20 token列表和价格和其他参数。
+3. SuperPaymaster后台服务（节点）收到来自dApps的API支付请求，包括交易数据和用户二次确认的指纹签名，验证签名是否OK
+4. 收到代付gas的签名请求，一般先验证指纹签名
+    - 确认此签名是来自于用户的指纹（公钥在参数中或者链上ENS注册）
+    - 确认指纹对此交易有效，且在有效期
+5. SuperPaymaster后台服务（节点）检查用户绑定的OpenCard NFT余额足够后，发送请求到SuperPaymaster合约代扣PNTs，代扣会存入节点账户。
+6. SuperPaymaster后台服务（节点）给交易做单独的paymasterAndData签名，承诺链上会支付gas
+7. 后续链上交互：dApps会调用Bundler处理交易，Bundler会调用Entrypoint来检查（调用SuperPaymaster验证签名）和支付gas
+
+#### ENS管理节点后台服务
+我们使用ENS来作为跨链的唯一性解决方案，来保障不同链上的合约有统一的约定地址，例如在OP上是op.ethpaymaster.eth, 而Arbi上是arb.ethpaymaster.eth。那我们需要一个二级域名注册和管理的工具，就我了解，ENS V2还在开发中，目前的V1方案是半中心化：你需要运行一个中心化服务器提供注册，以及响应链上的查询。但我不确定是否有新版本ENS API发布了。
+我们需要实现：
+1. 节点注册：任何节点都要先到node registry注册，参考上面
+2. ENS管理节点会预先配置一个根域名，例如zparty.eth
+3. ENS管理节点会接受查询一个子域名，例如jason.zparty.eth是否存在，返回结果，例如一个地址
+4. ENS管理节点会接受新增一个子域名，例如jack.zparty.eth和0x1234567890123456789012345678901234567890的地址，返回执行结果
+5. 每个节点都可以注册三级域名jason.node.zparty.eth，返回执行结果
+6. 所有注册的二级，三级域名，都可以被ether.js和其他支持ens解析的lib解析，实现去中心化域名的免费分发
+6. node在注册三级域名时，还需要提供text记录，例如提供的服务，api name，IP地址和域名
+请帮助我分析和调研，然后给出一个技术解决方案和开发需要的sdk等github repo，以及初步的系统架构，技术选型等。
+遵守ENS最新开发规范：，未来会支持ENSV2新规范（Namechain，建设中：https://roadmap.ens.domains/l2-roadmap/）
+
+
+
+### 4.5 Frontend and Desktop Application Development
+        Next.js Web交互, Tauri打包为跨平台的客户端。
+        使用Rust开发节点管理服务，实现一些难点。
+#### 节点管理服务
+        注册：生成密钥对，stake token，授权转移token
+        查看：查看节点信息，查看stake信息，查看reputation信息
+        管理：配置ENS的text信息，管理API列表和域名/IP
+        管理：管理节点状态，例如开启/关闭
+#### 简单dApp Demo
+        COS72，集成了AirAccount
+        注册/绑定Web2 Account
+        验证邮箱
+        EOA绑定
+        指纹绑定
+        生成AirAccount
+        购买Item交互
+        签名交易申请
+        交易成功返回
+#### SuperPaymaster配置管理
+        1. 节点注册后要加入OpenCards/OpenPNTs协议
+        2. 发行自己的社区积分和社区白板NFT（加入就送NFT）
+        3. 充值自己的ETH到SuperPaymaster
+        4. 设置Gas Token/PNTs接受地址列表和价格
+        5. SuperPaymaster Dashboard
+
+### 4.6 AirAccount Integration
+        描述如何集成AirAccount的账户生成和二次加密功能
+        任何dApps都可以集成AirAccount
+        1. node.js版本SDK安装
+        2. 一些约定和配置
+        3. 核心API调用
+### 4.7 SDSS Implementation Details
+        在节点完成节点注册、ENS配置后，可以加入SDSS网络了
+        安装COS72基础版客户端后
+        1. 查看N1到N5的stake要求和性能要求
+        2. 运行硬件检查程序，推荐你适合运行的节点
+        3. 拉取合适的服务包或者Docker image
+        4. 启动服务，测试是否对外提供服务
+        5. 查看自己的积分收入和Reputation变化
+mermaid流程图
+
+        节点通信图
+        基础交易数据结构
+        AirAccount二次签名数据结构
+        paymasterAndData数据结构
+        验证AirAccount签名
+        BLS聚合签名
+
+        Gas Token PNTs流转过程
+
+### 4.8 OpenCards/OpenPNTs Implementation
+        NFT/SBT合约实现，积分管理逻辑
+        1. 基于你的AirAccount，访问COS72.org
+        2. 建立自己的社区、积分和白板NFT
+
+
 **8. Discussion, Related Work and Comparison, Conclusion (对应模仿结构第8部分)**
     *   **8.1 Discussion**
         *   8.1.1 Addressing Usability Challenges (讨论SuperPaymaster如何解决易用性问题)

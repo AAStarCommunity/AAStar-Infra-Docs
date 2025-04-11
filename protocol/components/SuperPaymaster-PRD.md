@@ -158,3 +158,33 @@ POST /api/login
 ✅ 部署上线（CI/CD + 监控）  
 
 这样就能 **清晰 & 简单** 地设计一个互联网跨平台系统！ 🚀  
+
+## 合约设计
+https://github.com/AAStarCommunity/SuperPaymaster-Contract
+我们基于开源的单体paymaster合约进行改进，增加stake和子账户管理，以及子账户的注册和签名验证。
+原有Paymaster逻辑流程（EntrypointV0.7）：
+背景知识：
+EntrypointV0.6和0.7区别和变化？
+Paymaster的作用：你持有链下的签名和交易数据发给Paymaster，Paymaster验证签名支付Gas？
+当下Singleton Paymaster的代码结构和主要函数说明：
+如何添加：
+1. 子账户系统：
+  注册：节点使用任何钱包，提交自己节点公钥stake+注册节点公钥
+  查询：公开查询子账户（公钥对应钱包地址）拥有的余额
+  验证+支付gas：来自bundler的请求，提供交易数据和链下paymaster server（你的节点）的私钥签名，合约验证公钥和你节点签名匹配，则扣减你的子账户ETH余额并支付gas给entrypoint。
+  Post处理：支付成功后，SuperPaymaster会进行post处理，包括：
+    - 记录节点reputation
+    - 记录节点slash
+    - 更新节点stake余额
+    - 更新节点余额
+  Bundler：自运行的bundler，会检查签名对应的节点是否透支，如果透支，会拒绝交易，使用自定义签名，因此第三方bundler无法验证通过  
+1. Entrypoint检查交易是否需要代付Gas，如果有paymasterAndData签名，则调用SuperPaymaster验证签名支付Gas
+2. SuperPaymaster收到来自Entrypoint的支付gas请求，参数携带某个节点的对此交易的签名信息，包括：
+    - 节点公钥
+    - 节点签名
+    - 其他必要参数
+3. SuperPaymaster验证签名返回成功或者失败
+    - 确认此签名是来自于有效的stake节点：节点公钥注册过SuperPaymaster，且stake（存储在SuperPaymaster）足够高，reputation（存储在SuperPaymaster）足够高
+    - 确认签名对此交易有效，且在有效期
+4. Entrypoint收到验证成功后会抵扣SuperPaymaster在EntryPoint的预存的ETH，为交易支付Gas，然后执行后续正常的交易流程，gas payment结束
+5. 支付成功后合约会进行post处理，SuperPaymaster合约可以合理记录节点reputation等行为、计算Reputation（成功率）和Slash等等。
