@@ -36,6 +36,7 @@ In this paper, we introduce SuperPaymaster, a gas payment system based on ERC-43
 
 ## 2. Analysis of Current Gas Payment Systems and Associated Challenges
 This section delves into the foundational aspects of gas payment mechanisms within EVM-compatible blockchains, outlines the typical user workflow, and critically examines the multifaceted challenges and vulnerabilities inherent in current systems, including usability barriers and the specific risks associated with centralized solutions.
+![](https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202403052039293.png)
 
 ### 2.1 The Gas Payment Mechanism
 #### 2.1.1 Necessity of Gas Payment
@@ -188,6 +189,7 @@ We build SuperPaymaster based on ERC4337, so there are 4 parts:
 3. SuperPaymaster API: response to some quota and routing services directly or push to pool timely.
 4. SuperPaymaster client/dApps: initiate the user operation and submit it to bunlder after get the gas sponsorship signature from SuperPaymaster server.
 
+![](https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202504101315170.png)
 #### 3.5.2 Standardized Decentralized Service System (SDSS)
 
 ##### 3.5.1.1 ENS for Service Discovery
@@ -412,22 +414,31 @@ sequenceDiagram
     dApp-->>User: Display OpenPNTs balance, OpenCard status, and transaction history
 ```
 
-## 4. Implementation (Proof of Concept - PoC) 5/1500
+## 4. Implementation (Proof of Concept - PoC)
 This section provides an overview of the technical implementation of the SuperPaymaster, aiming to address the high costs, complex workflows, and inefficiencies of traditional gas payment mechanisms. By leveraging SDSS and relevant open protocols, the system mitigates and eliminates risks associated with centralized services, such as price monopolies and censorship vulnerabilities.
 ### 4.1 Technology Stack
 This section outlines the implementation specifics of the SuperPaymaster platform, addressing details ranging from configuration to smart contract deployment, node management, and user interface development. It highlights the components used to enhance system performance and ensure interoperability. We employed a variety of tools and frameworks to implement the SuperPaymaster Proof of Concept (PoC). Specifically, Foundry and Solidity were utilized to develop the core SuperPaymaster contract along with related contracts for ENS secondary resolution, PNTs issuance, OpenCard NFT issuance, and node registration. Next.js, React, and Node.js, combined with numerous libraries and frameworks, were used to build all interactive interfaces, delivering a dynamic and efficient user experience. Tauri was employed to package and distribute desktop applications across Windows, MacOS, Linux, iOS, Android, and Web platforms, supporting N1 (standard client) and N2 (web service provider) nodes. Go and Rust were used to develop backend services and node management applications, respectively, with Rust paired with Tauri for low-level service development, supporting N3 (backend service provider) and N4 (TEE service provider) nodes. Docker and Supabase facilitated the deployment and management of backend services, enabling N5 (standalone Docker+N3/N4) nodes. At the PoC stage, a P2P network was not introduced; instead, a designated node served as the scheduler. Additionally, the AirAccount API provided full lifecycle management for accounts. We also utilized Raspberry Pi 5B/16G as compute nodes to run the SuperPaymaster backend services and ENS-related APIs, ensuring the system’s scalability and stability.
 
 ### 4.2 System Setup and Configuration
 We need to setup AirAccount, SuperPaymaster Nodes and ENS Configuration, to get a decentralized account with gas sponsorship ability, and a basic config for SuperPaymaster PNTs, Cards and more parameters to pay your gas seemlessly. Also we need create cross-chain ENS API name for node registry to get decentralized invoking.
+
 #### AirAccount Configuration
-Email support 
+1. 官方申请一个合约账户地址，用来绑定你的SDK支付积分的账户：COS72.org
+2. 需求安装AirAccount SDK,  npm install airaccount
+3. 初始化AirAccount配置：配置你的社区名称，支付积分账户（1申请的地址），
+4. 因为你要使用SuperPaymaster产品，归属于AAStar社区的服务，就需要支付AAStar积分（直接购买）或者OpenPNTs发行的积分。
+
 #### SuperPaymaster Node Configuration
 #### ENS Configuration
 
 ### 4.3 Smart Contract Development
-        合约是系统的关键部分，通过不可篡改的代码，来保障验证Gas支付签名、支付Gas、抵扣合理的PNTs、合理的分配PNTs收入、计算Reputation（成功率）和Slash等等。
-        本次完成SuperPaymaster核心部分，更多设计参考[SuperPaymaster Design 0.12](../solutions/SuperPaymaster_v0.12.pdf)
-        [SuperPaymaster Design 0.13](../solutions/SuperPaymaster_v0.13.pdf)
+合约是系统的关键部分，通过不可篡改的代码，来保障验证Gas支付签名、支付Gas、抵扣合理的PNTs、合理的分配PNTs收入、计算Reputation（成功率）和Slash扣分等等。
+本次完成SuperPaymaster核心部分，更多设计参考[SuperPaymaster Design 0.12](../solutions/SuperPaymaster_v0.12.pdf)
+[SuperPaymaster Design 0.13](../solutions/SuperPaymaster_v0.13.pdf)
+1. 合约余额账户Stake管理
+2. 交易签名验证、支付、记录和余额记录变动
+3. 交易成功后的post处理：声誉增加
+4. 异步的交易状态补偿：失败和成功的再次check，提交proof和声誉修改（链下，调用链上方法，需要提交凭证且可验证通过）
 #### SuperPaymaster合约
 
 **合约行为**
@@ -474,9 +485,7 @@ Email support
 6. 所有注册的二级，三级域名，都可以被ether.js和其他支持ens解析的lib解析，实现去中心化域名的免费分发
 6. node在注册三级域名时，还需要提供text记录，例如提供的服务，api name，IP地址和域名
 请帮助我分析和调研，然后给出一个技术解决方案和开发需要的sdk等github repo，以及初步的系统架构，技术选型等。
-遵守ENS最新开发规范：，未来会支持2.0新规范
-
-TODO相关开发文档和规范
+遵守ENS最新开发规范：，未来会支持ENSV2新规范（Namechain，建设中：https://roadmap.ens.domains/l2-roadmap/）
 
 
 
@@ -533,6 +542,8 @@ mermaid流程图
 
 ### 4.8 OpenCards/OpenPNTs Implementation
         NFT/SBT合约实现，积分管理逻辑
+        1. 基于你的AirAccount，访问COS72.org
+        2. 建立自己的社区、积分和白板NFT
 
 ## 5. Discussion
         *   5.1 Addressing Usability Challenges (讨论SuperPaymaster如何解决易用性问题)

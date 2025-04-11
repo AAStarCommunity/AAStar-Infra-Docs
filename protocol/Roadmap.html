@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenNest Protocol Roadmap</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --completed-color: #2ecc71;
+            --in-progress-color: #f39c12;
+            --planned-color: #95a5a6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .phase {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .phase-tag {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .tag-completed {
+            background-color: var(--completed-color);
+        }
+
+        .tag-current {
+            background-color: var(--in-progress-color);
+        }
+
+        .tag-planned {
+            background-color: var(--planned-color);
+        }
+
+        .phase-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .milestone {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .milestone-icon {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .milestone-detail {
+            flex: 1;
+        }
+
+        .milestone-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .milestone-description {
+            color: #666;
+        }
+
+        .phase-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 100%;
+        }
+
+        .accent-0 {
+            background-color: #3498db;
+        }
+
+        .accent-1 {
+            background-color: #e74c3c;
+        }
+
+        .accent-2 {
+            background-color: #2ecc71;
+        }
+
+        .accent-3 {
+            background-color: #f39c12;
+        }
+
+        .timeline-indicator {
+            position: absolute;
+            left: -50px;
+            top: 0;
+            height: 100%;
+            width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-line {
+            height: 100%;
+            width: 2px;
+            background-color: #ddd;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .phase {
+                padding: 1.5rem;
+            }
+
+            .timeline-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OpenNest Protocol Roadmap</h1>
+            <p class="subtitle">
+                Building accessible blockchain infrastructure for mass adoption through progressive decentralization, interoperable middleware, and real-world use cases.
+            </p>
+        </header>
+
+        <div class="roadmap">
+            <div class="phase">
+                <div class="phase-accent accent-0"></div>
+                <div class="phase-header">
+                    <h2 class="phase-title">
+                        <span>Phase 0</span>
+                        <span class="phase-tag tag-current">In Progress</span>
+                    </h2>
+                </div>
+                <div class="phase-content">
+                    <div class="milestone">
+                        <div class="milestone-icon">✓</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Core Components Development</h3>
+                            <p class="milestone-description">
+                                Building the foundation of the OpenNest ecosystem through the development of key technical components:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>SuperPaymaster V0.1</strong> - Enhanced account abstraction infrastructure for seamless transactions</li>
+                                <li><strong>AirAccount V0.2</strong> - Simplified wallet creation and management system</li>
+                                <li><strong>OpenPNTs</strong> - Interoperable points network for cross-application value transfer</li>
+                                <li><strong>OpenCards</strong> - Digital identity and membership solution</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">✓</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Developer Infrastructure</h3>
+                            <p class="milestone-description">
+                                Creating essential tools and documentation for developers to build on the OpenNest protocol:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Comprehensive SDK for seamless integration</li>
+                                <li>Implementation of multi-signature transaction systems</li>
+                                <li>Point-based gas sponsorship mechanism for fee abstraction</li>
+                                <li>Basic demonstration applications showcasing core functionality</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">⟳</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Protocol Foundation</h3>
+                            <p class="milestone-description">
+                                Establishing the theoretical and operational framework for the protocol:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Initial whitepaper draft outlining the protocol's vision, architecture, and mechanics</li>
+                                <li>Protocol launch with basic functionality</li>
+                                <li>Initial community engagement and developer onboarding</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-accent accent-1"></div>
+                <div class="phase-header">
+                    <h2 class="phase-title">
+                        <span>Phase 1</span>
+                        <span class="phase-tag tag-planned">Planned</span>
+                    </h2>
+                </div>
+                <div class="phase-content">
+                    <div class="milestone">
+                        <div class="milestone-icon">1</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Open Source Ecosystem Development</h3>
+                            <p class="milestone-description">
+                                Expanding the OpenNest framework through community-driven development:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>dApps Collection</strong> - Building essential applications that demonstrate protocol capabilities</li>
+                                <li><strong>AI Integration Tools</strong> - Creating interfaces between AI systems and blockchain functionality</li>
+                                <li><strong>Middleware Layer</strong> - Developing connectors between traditional systems and blockchain infrastructure</li>
+                                <li><strong>SDSS (Self-Deploying Smart Services)</strong> - Enabling automated deployment of decentralized services</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">2</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Minimum Viable Ecosystem</h3>
+                            <p class="milestone-description">
+                                Establishing initial closed-loop systems to validate protocol effectiveness:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Deployment of interconnected applications demonstrating end-to-end functionality</li>
+                                <li>Testing of economic flows within controlled environments</li>
+                                <li>Scenario exploration and experimentation with early adopters</li>
+                                <li>Initial performance metrics and system optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-accent accent-2"></div>
+                <div class="phase-header">
+                    <h2 class="phase-title">
+                        <span>Phase 2</span>
+                        <span class="phase-tag tag-planned">Planned</span>
+                    </h2>
+                </div>
+                <div class="phase-content">
+                    <div class="milestone">
+                        <div class="milestone-icon">1</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Protocol Economics & Governance</h3>
+                            <p class="milestone-description">
+                                Developing sustainable economic models and governance systems:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Comprehensive tokenomics framework with utility and governance considerations</li>
+                                <li>Incentive alignment mechanisms for various stakeholders</li>
+                                <li>Initial governance structure for protocol decision-making</li>
+                                <li>Economic simulation and stress testing</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">2</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">OpenNest Incubation Program</h3>
+                            <p class="milestone-description">
+                                Supporting real-world applications built on the protocol:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Selection and funding of promising dApp projects</li>
+                                <li>Technical support and co-development with selected teams</li>
+                                <li>Field testing with actual users in controlled environments</li>
+                                <li>Validation of sustainable usage patterns and value creation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">3</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Social Impact Validation</h3>
+                            <p class="milestone-description">
+                                Demonstrating tangible benefits to individual users:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Measuring and documenting quality-of-life improvements</li>
+                                <li>Establishing sustainable economic loops with real value exchange</li>
+                                <li>Identifying most impactful use cases for further development</li>
+                                <li>User feedback collection and product iteration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-accent accent-3"></div>
+                <div class="phase-header">
+                    <h2 class="phase-title">
+                        <span>Phase 3</span>
+                        <span class="phase-tag tag-planned">Planned</span>
+                    </h2>
+                </div>
+                <div class="phase-content">
+                    <div class="milestone">
+                        <div class="milestone-icon">1</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Full Protocol Launch</h3>
+                            <p class="milestone-description">
+                                Delivering a complete, production-ready protocol:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Finalized economic model with balanced incentives</li>
+                                <li>Security-audited smart contracts</li>
+                                <li>Testnet deployment and extensive QA</li>
+                                <li>Mainnet launch with initial applications</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">2</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Ecosystem Growth</h3>
+                            <p class="milestone-description">
+                                Expanding the protocol's reach and impact:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Community education programs and resources</li>
+                                <li>Developer grants and incentive programs</li>
+                                <li>Cross-community collaborations and integrations</li>
+                                <li>Support for diverse application development across sectors</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-icon">3</div>
+                        <div class="milestone-detail">
+                            <h3 class="milestone-title">Mass Adoption Initiatives</h3>
+                            <p class="milestone-description">
+                                Breaking down barriers to widespread blockchain usage:
+                            </p>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>User experience refinement for non-technical users</li>
+                                <li>Integration with existing digital identity systems</li>
+                                <li>Strategic partnerships with traditional platforms</li>
+                                <li>Regional adaptation and localization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer style="margin-top: 4rem; text-align: center; color: #777; font-size: 0.9rem;">
+            <p>This roadmap represents our current plans and is subject to change as the project evolves. We are committed to building a transparent and community-driven protocol.</p>
+            <p style="margin-top: 1rem;">© 2025 OpenNest Protocol</p>
+        </footer>
+    </div>
+</body>
+</html>
