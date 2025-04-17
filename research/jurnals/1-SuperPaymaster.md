@@ -439,15 +439,98 @@ Hardware Testing (DePIN): Raspberry Pi 5B devices [[Cite Raspberry Pi]] served a
 We need to setup AirAccount, SuperPaymaster Nodes and CometENS Configuration, to set interaction config with decentralized account supporting gas sponsorship, and a basic config for OpenPNTs, OpenCards and more parameters to pay your gas seemlessly. Also we need create cross-chain CometENS API name for node registry to get decentralized invoking.
 
 ### 4.3 Smart Contract Design and Development
-Smart contract is key part of the system, through mutable on-chain code, to ensure verification of gas payment signatures, payment of gas, deduction of reasonable PNTs, reasonable allocation of PNTs income, calculation of reputation (success rate) and Slash etc.
+Smart contract is the key part of the system, through mutable on-chain code, to ensure verification of gas payment signatures, payment of gas, deduction of reasonable PNTs, allocation of PNTs income, calculation of reputation (success rate) and Slash etc.
 We only introduce core ability of SuperPaymaster contract, more details can be found in [SuperPaymaster Design 0.13](../solutions/SuperPaymaster_v0.13.pdf).
-1. Stake: Contract balance account stake management
-2. Verify and Pay: Signature verification, payment, record and balance record change
+1. Stake: Sub-account stake management for security and gas sponsor
+2. Verify and Pay: Sub-account signature verification, payment, record and balance maintenance
 3. Post Processing: Transaction success post processing: reputation increase
 4. Compensation: Asynchronous transaction status compensation: failed and successful re-check, proof submission and reputation modification (off-chain, call on-chain method)
+#### Main Flow
+```mermaid
+sequenceDiagram
+    participant User as User/Wallet
+    participant SDK as Wallet SDK
+    participant Bundler as Bundler (Ultra Relay)
+    participant EP as EntryPoint Contract
+    participant SP as SuperPaymaster Contract
+    participant SponsorRelay as Sponsor Relay (Signer)
+    participant SponsorERC20 as Sponsor's ERC20
+
+    User->>SDK: Initiate action (e.g., transfer)
+    SDK->>SDK: Construct UserOperation (calldata, etc.)
+    SDK->>SponsorRelay: Request gas sponsorship (UserOp hash, max ERC20 cost, token)
+    SponsorRelay->>SponsorRelay: Verify user eligibility (off-chain)
+    SponsorRelay->>SponsorRelay: Prepare signature data (userOpHash, SP addr, sponsor, token, maxErc20Cost, timestamps, chainId)
+    SponsorRelay->>SponsorRelay: Sign data with Sponsor's configured key
+    SponsorRelay->>SDK: Return signature & Paymaster data (sponsor addr, token, maxErc20Cost, timestamps, signature)
+    SDK->>SDK: Add paymasterAndData to UserOperation
+    SDK->>Bundler: Submit UserOperation (eth_sendUserOperation)
+
+    Bundler->>Bundler: Receive UserOp
+    Bundler->>Bundler: Basic Validation (sig length, gas limits etc.)
+    Bundler->>SP: [Bundler Check 1] Read sponsorStakes(sponsor)
+    Bundler->>Bundler: [Bundler Check 2] Decode paymasterAndData, get sponsor, estimate maxEthCost
+    Bundler->>Bundler: [Bundler Check 3] Check onChainStake >= pendingCost[sponsor] + maxEthCost
+    
+    alt Insufficient Stake in Bundler Check
+        Bundler-->>SDK: Reject UserOp (stake limit)
+    else Sufficient Stake
+        Bundler->>Bundler: Add maxEthCost to pendingCost[sponsor]
+        Bundler->>EP: Simulate Validation (eth_estimateUserOperationGas or simulateValidation)
+        EP->>SP: call validatePaymasterUserOp(userOp, userOpHash, maxCost)
+        SP->>SP: Decode paymasterAndData
+        SP->>SP: Check config (enabled, token match)
+        SP->>SP: Verify Signature (ecrecover)
+        SP->>SP: Calculate maxEthCost from maxErc20Cost & rate
+        SP->>SP: Check sponsorStakes[sponsor] >= maxEthCost (Contract Check)
+        
+        alt Validation Failed in Contract
+            SP-->>EP: Revert (e.g., bad sig, insufficient stake)
+            EP-->>Bundler: Simulation Failed
+            Bundler-->>SDK: Reject UserOp (simulation failed)
+            Bundler->>Bundler: Remove cost from pendingCost[sponsor]
+        else Validation Succeeded in Contract
+            SP-->>EP: Return context, validationData (timestamps)
+            EP-->>Bundler: Simulation OK (return gas estimates)
+        end
+        
+        Bundler->>Bundler: Add valid UserOp to Mempool / Bundle
+    end
+
+    opt Bundle Inclusion
+        Bundler->>EP: Send Bundle (handleOps)
+        EP->>EP: Iterate UserOps in Bundle
+        EP->>SP: call validatePaymasterUserOp (again, pre-execution check)
+        SP->>SP: (Performs checks again)
+        SP-->>EP: Return context, validationData
+        EP->>userOp.sender: Execute UserOperation (CALL userOp.callData)
+        
+        alt UserOp Execution Fails
+             EP->>SP: call postOp(mode=opReverted, context, 0)
+             SP->>SP: Handle revert (usually no stake change)
+             SP-->>EP: Return
+        else UserOp Execution Succeeds
+            EP->>EP: Calculate actualGasCost
+            EP->>SP: call postOp(mode=opSucceeded, context, actualGasCost)
+            SP->>SP: Decode context (get sponsor, token, userOpHash etc.)
+            SP->>SP: Check actualGasCost <= maxEthCost
+            SP->>SP: Check sponsorStakes[sponsor] >= actualGasCost
+            SP->>SP: Deduct actualGasCost from sponsorStakes[sponsor]
+            SP->>SP: Emit SponsorshipSuccess(...)
+            SP->>SP: Check & Emit StakeWarning(...) if needed
+            SP-->>EP: Return (signals successful payment)
+        end
+        
+        EP->>Bundler: Pay Bundler Fee (from EP stake)
+        Bundler->>Bundler: Remove processed UserOp costs from pendingCost[sponsor]
+    end
 
 #### SuperPaymaster Contract
-我们只介绍两个主要函数：stake和verifyAndPay，更多细节可以参考[SuperPaymaster](https://github.com/AAStarCommunity/SuperPaymaster-Contract)。
+We only introduce two main functions: stake and verifyAndPay, more details can be found in [SuperPaymaster](https://github.com/AAStarCommunity/SuperPaymaster-Contract).
+We build this contract based on ERC4337 and other Open-source projects: Pimilico singleton paymaster(https://github.com/pimlicolabs/singleton-paymaster) and ZeroDev bundler(https://github.com/zerodevapp/ultra-relay).
+We add sub-account stake and gas sponsor ability and risk control ability on-chain and off-chain.
+
+
 #### ENS API合约
 ### 4.4 Backend Service Implementation
 #### 节点注册
