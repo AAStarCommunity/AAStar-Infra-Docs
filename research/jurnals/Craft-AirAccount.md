@@ -15,9 +15,11 @@ Managing assets on blockchains fundamentally relies on cryptographic accounts se
 
 **Keywords:** Account Abstraction, ERC-4337, Smart Contract Wallet, Trusted Execution Environment (TEE), Blockchain Usability, Key Management, Social Recovery, Semi-Custody
 
-## Introduction
+## 1. Introduction
 区块链上的所有资产，都依赖于加密账户来管理：一个依赖于加密算法和自托管私钥的安全机制。这个解决方案从HCI和TAM角度看，存在很多的问题，例如丢失了私钥等于丢失一切，对普通人技术要求太高，一个错误操作可能就造成无法挽回的损失等等。这些问题归结为一句话，也是区块链大规模应用的第一个阻碍：需要一个安全易用低成本的区块链账户。本研究提出了AirAccount，依赖于ERC4337的合约账户可编程特性，提供了更安全：指纹二次验证和TEE管理部分私钥，更方便：社交账户绑定和无感交易SDK，更易用：去中心的无许可账户机制，以及依赖Standard Decentralized Service System（SDSS）的更多新特性：半自托管指纹私钥、永不丢失社交恢复、支持无感Gas支付等。
-## 组件
+## 2. Blockchain Account System and Threat Model
+## 3. System Overview
+## 4. System Implementation
 ### ERC4337 Based Mechanism
 以太坊传统账户是EOA，私钥只能通过从生成工具（并非100%安全）复制到文本或者硬件保存，容易忘记和丢失，然后损失所有资产。硬件钱包独立的产生和管理私钥，提升了安全性，但仍然存在风险，例如最近的故障问题和芯片漏洞、甚至后门事件。ERC4337帮助账户建立了可执行、可升级的代码，从而让账户更智能：包括丢失更换私钥、Gas代付、定期执行、日限额、特定合约限定交互等等，都是代码可以完成的功能，当然也带来了复杂度和更多可能得脆弱点。如何权衡和设计一个普适的区块链账户系统，一直是业界的问题之一，也是应对未来的大规模应用，快速普及区块链的必经之路。
 ### 分层安全机制
@@ -29,3 +31,11 @@ Managing assets on blockchains fundamentally relies on cryptographic accounts se
 ### 指纹随机数+TEE硬件+Passkey=私钥1
 ### 硬件钱包管理私钥2
 
+
+## 5. Discussion
+## 6. Related Research
+## 7. Conclusion
+## 8. Future Work
+## 9. Acknowledgments
+
+References
