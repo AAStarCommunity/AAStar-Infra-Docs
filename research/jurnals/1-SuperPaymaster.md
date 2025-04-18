@@ -445,7 +445,7 @@ We only introduce core ability of SuperPaymaster contract, more details can be f
 2. Verify and Pay: Sub-account signature verification, payment, record and balance maintenance
 3. Post Processing: Transaction success post processing: reputation increase
 4. Compensation: Asynchronous transaction status compensation: failed and successful re-check, proof submission and reputation modification (off-chain, call on-chain method)
-#### Main Flow
+#### 4.3.1 Main Flow
 ```mermaid
 sequenceDiagram
     participant User as User/Wallet
@@ -524,14 +524,184 @@ sequenceDiagram
         EP->>Bundler: Pay Bundler Fee (from EP stake)
         Bundler->>Bundler: Remove processed UserOp costs from pendingCost[sponsor]
     end
+```
 
-#### SuperPaymaster Contract
-We only introduce two main functions: stake and verifyAndPay, more details can be found in [SuperPaymaster](https://github.com/AAStarCommunity/SuperPaymaster-Contract).
+#### 4.3.2 SuperPaymaster Contract
+
+The smart contract has two main functions: stake and verifyAndPay, more details can be found in [SuperPaymaster](https://github.com/AAStarCommunity/SuperPaymaster-Contract).
 We build this contract based on ERC4337 and other Open-source projects: Pimilico singleton paymaster(https://github.com/pimlicolabs/singleton-paymaster) and ZeroDev bundler(https://github.com/zerodevapp/ultra-relay).
-We add sub-account stake and gas sponsor ability and risk control ability on-chain and off-chain.
+We add sub-account stake module to permit permissionless staker to run their own paymaster for supporting their own ERC20 gas tokens. We improve verify funtion to avoid over-use risk with on-chain contract and off-chain bundler. Also we build SuperPaymaster relay server framework to support dApps to query gas price and pay gas with different ERC20 supporting.
+Stake manager contract provide a stake reputation and ETH payment guarantee for every ERC20 gas payment.
+```solidity
+// SuperPaymaster.sol main function1: Stake manager
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                    SPONSOR MANAGEMENT                       */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /**
+     * @notice Set the withdrawal delay period
+     * @param _withdrawalDelay New delay period in seconds
+     */
+    function setWithdrawalDelay(uint256 _withdrawalDelay) external onlyAdminOrManager {
+        require(_withdrawalDelay > 0, "SuperPaymaster: withdrawal delay must be positive");
+        withdrawalDelay = _withdrawalDelay;
+    }
+
+    /**
+     * @inheritdoc ISuperPaymaster
+     */
+    function registerSponsor(address sponsor) external override onlyAdminOrManager {
+        require(!isSponsor[sponsor], "SuperPaymaster: sponsor already registered");
+        isSponsor[sponsor] = true;
+        
+        // Initialize with default config (owner = sponsor itself)
+        sponsorConfigs[sponsor] = SponsorConfig({
+            owner: sponsor,
+            token: address(0),
+            exchangeRate: 0,
+            warningThreshold: 0,
+            isEnabled: false,
+            signer: address(0)
+        });
+        
+        emit SponsorRegistered(sponsor);
+    }
+
+    /**
+     * @inheritdoc ISuperPaymaster
+     */
+    function setSponsorConfig(
+        address token,
+        uint256 exchangeRate,
+        uint256 warningThreshold,
+        address signer
+    ) external override {
+        address sponsor = msg.sender;
+        require(isSponsor[sponsor], "SuperPaymaster: not a sponsor");
+        require(msg.sender == sponsorConfigs[sponsor].owner, "SuperPaymaster: only sponsor can modify settings");
+        require(token != address(0), "SuperPaymaster: invalid token address");
+        require(signer != address(0), "SuperPaymaster: invalid signer address");
+        
+        SponsorConfig storage config = sponsorConfigs[sponsor];
+        config.token = token;
+        config.exchangeRate = exchangeRate;
+        config.warningThreshold = warningThreshold;
+        config.signer = signer;
+        
+        emit SponsorConfigSet(sponsor, token, exchangeRate, warningThreshold, signer);
+    }
+```
+
+verifyAndPay provides a security guarantee for dApps to pay gas with different ERC20 tokens under their credit stake amount.
+
+```solidity
+// SuperPaymaster.sol main function2: verifyAndPay
+    function validateSponsorUserOp(
+        PackedUserOperation calldata userOp,
+        bytes32 userOpHash,
+        uint256 /*requiredPreFund*/,
+        bool allowAllBundlers,
+        bytes calldata paymasterConfig
+    ) internal returns (bytes memory context, uint256 validationData) {
+        // 检查bundler权限
+        if (!allowAllBundlers && !isBundlerAllowed[tx.origin]) {
+            revert BundlerNotAllowed(tx.origin);
+        }
+    
+        // 检查是否重放攻击
+        require(!processedOps[userOpHash], "SuperPaymaster: operation hash already processed");
+    
+        // 解析sponsor数据
+        (
+            address sponsor,
+            address token,
+            uint256 maxErc20Cost,
+            uint48 validUntil,
+            uint48 validAfter,
+            bytes calldata signature
+        ) = _parseSponsorConfig(paymasterConfig);
+        
+        // 验证sponsor是否有效
+        require(isSponsor[sponsor], "SuperPaymaster: invalid sponsor");
+        require(sponsorConfigs[sponsor].isEnabled, "SuperPaymaster: sponsor not enabled");
+        
+        // 验证token是否匹配
+        require(token == sponsorConfigs[sponsor].token, "SuperPaymaster: token mismatch");
+        
+        // 获取sponsor配置的签名者
+        address signer = sponsorConfigs[sponsor].signer;
+        
+        // 创建消息哈希用于验证签名
+        bytes32 hash = _getSponsorHash(userOp, userOpHash, sponsor, token, maxErc20Cost, validUntil, validAfter);
+        
+        // 验证签名
+        (bytes32 r, bytes32 s, uint8 v) = _extractSignature(signature);
+        address recoveredSigner = ecrecover(hash, v, r, s);
+        
+        // 检查签名是否有效
+        if (recoveredSigner != signer) {
+            revert("SuperPaymaster: invalid sponsor signature");
+        }
+        
+        // 计算最大ETH成本
+        uint256 exchangeRate = sponsorConfigs[sponsor].exchangeRate;
+        require(exchangeRate > 0, "SuperPaymaster: invalid exchange rate");
+        
+        // 计算maxEthCost: (maxErc20Cost * 1 ether) / exchangeRate
+        uint256 maxEthCost = (maxErc20Cost * 1 ether) / exchangeRate;
+        
+        // 获取sponsor stake
+        EnhancedSponsorStake storage stake = sponsorStakes[sponsor];
+        
+        // 确保sponsor有足够的stake
+        require(
+            stake.stakedAmount >= maxEthCost,
+            "SuperPaymaster: insufficient sponsor stake"
+        );
+
+        // 锁定此操作的资金
+        if (stake.userOpLocks[userOpHash] == 0) {
+            stake.lockedAmount += maxEthCost;
+            stake.userOpLocks[userOpHash] = maxEthCost;
+            emit StakeLocked(sponsor, userOpHash, maxEthCost);
+        }
+        
+        // 打包验证数据（签名有效性和时间戳）
+        validationData = _packValidationData(false, validUntil, validAfter);
+        
+        // 编码上下文供postOp使用
+        context = abi.encode(sponsor, token, maxEthCost, maxErc20Cost, userOpHash);
+        
+        emit UserOperationSponsored(userOpHash, userOp.getSender(), SPONSOR_MODE, token, maxErc20Cost, maxEthCost);
+        
+        return (context, validationData);
+    }
+
+```
+#### 4.3.3 ENS API System
+ENS is a decentralized way to publicate your service to the world. We will create a Registry Contract for any stakers to register their service.
+And we will create a Resolver Contract for any stakers to resolve their service in ENS name.
+ENS is not only a domain name resolver, but also a decentralized storage system which can save text record and more data.
+```Javascript
+// Standard Restfull API
+baseURL = "https://api.aastar.io";
+baseENS = "api.zparty.eth";
+nodeName = "XXXDAO";
+serviceList = ["SuperPaymaster"];
+setName to set your own node address.
+setPubkey to set your own node public key(not a stable way).
+setSubnodeOwner to set your own node sub domain owner on the L1 ENS Registry.
+setContenthash to help node to have a readme web page in IPFS or other hash address.
+
+```
+We need deploy a Resolver contract in Optimism Layer2.
+
+```solidity
 
 
-#### ENS API合约
+```
+
 ### 4.4 Backend Service Implementation
 #### 节点注册
 所有后端服务都需要先注册为节点

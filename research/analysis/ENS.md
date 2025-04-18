@@ -678,3 +678,513 @@ console.log(service); // "payment"
 - **跨链实现**：通过 Resolver 存储跨链地址，客户端指定链名解析。
 
 若需完整跨链支持，建议等待 ENS V2 或集成跨链协议。当前方案已满足 Optimism 上的需求，跨链部分可手动扩展。有进一步问题欢迎追问！
+
+### 简单行动方案（再问2.5pro）
+
+对于ens的domain设置，请提供官方最新api的使用指导，来完成text record的设置和读取，从而完成一个去中心的api method list的存储和更新
+
+好的，下面是使用当前（截至 2025 年初）官方推荐的库（主要是 ethers.js）与 ENS 交互，设置和读取 Text Records 的指导，以实现去中心化的 API Method List 存储和更新。
+
+**核心概念**
+
+1.  **ENS (Ethereum Name Service):** 将人类可读的名称（如 `myapi.eth`）解析为机器可读的标识符（如以太坊地址、IPFS 内容哈希、以及文本记录等）。
+2.  **Resolver:** 一个智能合约，负责存储 ENS 名称对应的记录（地址、文本记录等）。一个 ENS 名称必须设置一个 Resolver 合约地址，才能存储记录。最常用的是 ENS 官方部署的公共解析器（Public Resolver）。
+3.  **Text Records:** ENS 名称可以关联的键值对（key-value）数据。键和值都是字符串。非常适合存储元数据，如 API 端点列表、描述、版本信息等。
+4.  **Controller/Owner:** ENS 名称的所有者（或被授权的地址）才有权限修改其记录（包括设置 Resolver 地址和写入 Text Records）。
+5.  **Namehash:** ENS 内部用于标识名称的哈希算法结果。库（如 ethers.js）通常会自动处理名称到 namehash 的转换。
+
+**目标：** 将一个 API 方法列表（例如 JSON 格式）存储在 `myapi.eth` 这个 ENS 名称的 Text Record 中，键名为 `api.methods.v1.json`。
+
+**先决条件**
+
+1.  **Node.js 和 npm/yarn:** 用于运行 JavaScript 代码。
+2.  **ethers.js 库:** 当前最流行和推荐的与以太坊交互的 JS 库。安装：`npm install ethers` 或 `yarn add ethers`。
+3.  **以太坊 Provider URL:** 连接到以太坊节点的途径（例如 Infura, Alchemy, 或本地节点 URL）。用于读取数据。
+4.  **钱包/Signer:** 一个拥有 `myapi.eth` 控制权的以太坊钱包（例如 MetaMask、硬件钱包或私钥）。用于设置（写入）数据，因为这需要签名交易并支付 Gas。
+
+---
+
+**一、设置 Text Record (写入/更新)**
+
+设置 Text Record 是一个需要发送交易的操作，因此需要一个 `Signer`。
+
+```javascript
+import { ethers } from "ethers";
+
+// --- 配置 ---
+// 替换为你的 Provider URL (例如 Infura/Alchemy)
+const providerUrl = "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID";
+// 替换为拥有 ENS 域名的钱包私钥，或使用 MetaMask 等浏览器钱包提供 Signer
+// 警告：直接在代码中暴露私钥非常不安全，仅用于演示目的。
+// 推荐使用环境变量或更安全的钱包管理方式（如 HD Wallet、连接浏览器钱包）。
+const privateKey = "YOUR_PRIVATE_KEY";
+// 你要设置记录的 ENS 名称
+const ensName = "myapi.eth";
+// Text Record 的 Key
+const recordKey = "api.methods.v1.json"; // 使用描述性、可能带版本的 key
+
+// 要存储的 API 方法列表 (示例 JSON)
+const apiMethods = {
+  version: "1.0.2",
+  lastUpdated: new Date().toISOString(),
+  methods: [
+    { name: "getMethodList", path: "/methods", httpMethod: "GET", description: "Returns the list of available methods." },
+    { name: "getUserData", path: "/users/{userId}", httpMethod: "GET", description: "Get data for a specific user." },
+    { name: "updateUserData", path: "/users/{userId}", httpMethod: "POST", description: "Update data for a specific user." },
+  ],
+};
+
+// 将数据转换为 JSON 字符串
+const recordValue = JSON.stringify(apiMethods, null, 2); // 使用 null, 2 进行格式化，方便阅读，但会增加 gas 成本
+
+// --- 连接和设置 ---
+
+async function setTextRecord() {
+  // 1. 连接 Provider
+  const provider = new ethers.JsonRpcProvider(providerUrl);
+
+  // 2. 创建 Signer (用于发送交易)
+  const wallet = new ethers.Wallet(privateKey, provider);
+  console.log(`Using wallet address: ${wallet.address}`);
+
+  // 3. 获取 ENS 名称的 Resolver
+  // ethers.js 会自动查找与 ensName 关联的 resolver 地址
+  const resolver = await provider.getResolver(ensName);
+  if (!resolver) {
+    console.error(`Resolver not found for ${ensName}. Make sure the resolver is set correctly on the ENS registry.`);
+    // 你需要先通过 ENS App (app.ens.domains) 或其他方式为你的域名设置 Resolver
+    // 通常设置为最新的 ENS Public Resolver 地址
+    return;
+  }
+  console.log(`Found resolver for ${ensName} at: ${resolver.address}`);
+
+  // 检查当前 Signer 是否是该 ENS 名称的 Owner/Controller
+  // 注意：getResolver 不直接提供 owner 信息，需要额外查询 ENS Registry
+  // const registry = new ethers.Contract(await provider.getNetwork().ensAddress, [
+  //   'function owner(bytes32 node) view returns (address)'
+  // ], provider);
+  // const node = ethers.namehash(ensName);
+  // const owner = await registry.owner(node);
+  // if (owner.toLowerCase() !== wallet.address.toLowerCase()) {
+  //    console.warn(`Wallet ${wallet.address} is not the owner of ${ensName} (${owner}). You might not have permission.`);
+  //    // 实际应用中应阻止交易或进行更严格的权限检查
+  // }
+
+  // 4. 获取与 Signer 连接的 Resolver 合约实例 (允许发送交易)
+  // 注意：resolver.address 是解析器地址，我们需要用 signer 连接它
+  const resolverContract = new ethers.Contract(resolver.address, resolver.interface, wallet);
+
+  console.log(`Setting text record for ${ensName}:`);
+  console.log(`  Key: ${recordKey}`);
+  console.log(`  Value: ${recordValue}`);
+
+  try {
+    // 5. 调用 setText 方法
+    // ethers.js 的 resolver.setText(key, value) 内部会处理 namehash
+    // 但直接用 Contract 实例需要手动传入 namehash
+    const node = ethers.namehash(ensName);
+    const tx = await resolverContract.setText(node, recordKey, recordValue);
+
+    console.log(`Transaction sent: ${tx.hash}`);
+    console.log("Waiting for transaction confirmation...");
+
+    // 6. 等待交易被挖掘
+    const receipt = await tx.wait(); // 等待1个区块确认
+
+    if (receipt.status === 1) {
+        console.log("Transaction successful!");
+        console.log(`Text record set for ${ensName} [${recordKey}]`);
+    } else {
+        console.error("Transaction failed!");
+        console.error("Receipt:", receipt);
+    }
+
+  } catch (error) {
+    console.error("Error setting text record:", error);
+    // 常见错误：权限不足、Gas 不足、Resolver 未设置、Value 过大等
+  }
+}
+
+setTextRecord();
+```
+
+**注意事项 (设置):**
+
+* **权限:** 只有 ENS 名称的 Controller（通常是 Owner）才能调用其 Resolver 的 `setText` 方法。确保你的 `Signer` 拥有权限。
+* **Gas 成本:** 设置 Text Record 是一个链上交易，需要支付 Gas。Value 的长度会影响 Gas 成本，尽量保持简洁。如果数据量很大，考虑只在 ENS 中存储一个指向链下数据（如 IPFS CID 或 Arweave ID）的链接。
+* **Resolver 设置:** 确保你的 ENS 名称已经设置了 Resolver 地址（通常是 ENS Public Resolver）。你可以在 ENS App (app.ens.domains) 上检查和设置。
+* **安全性:** **永远不要**在代码中硬编码私钥。使用环境变量、`.env` 文件（配合 `dotenv` 库）或通过安全的钱包连接方式（如 MetaMask SDK、WalletConnect）获取 `Signer`。
+* **覆盖:** 对同一个 `key` 再次调用 `setText` 会覆盖之前的值。
+
+---
+
+**二、读取 Text Record**
+
+读取 Text Record 是一个 `view` 操作，不需要签名，只需要一个 `Provider`。
+
+**方法 1: 使用 Ethers.js Provider**
+
+这是最直接的方式。
+
+```javascript
+import { ethers } from "ethers";
+
+// --- 配置 ---
+const providerUrl = "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID";
+const ensName = "myapi.eth"; // 你要查询的 ENS 名称
+const recordKey = "api.methods.v1.json"; // 你要查询的 Key
+
+// --- 连接和读取 ---
+
+async function getTextRecord() {
+  // 1. 连接 Provider
+  const provider = new ethers.JsonRpcProvider(providerUrl);
+
+  try {
+    // 2. 获取 ENS 名称的 Resolver
+    // getResolver 会返回一个连接到 Provider 的 Resolver 实例
+    const resolver = await provider.getResolver(ensName);
+
+    if (!resolver) {
+      console.log(`Resolver not found for ${ensName}. Cannot read text record.`);
+      return;
+    }
+    console.log(`Using resolver at: ${resolver.address}`);
+
+    // 3. 调用 getText 方法读取记录
+    // ethers.js 的 resolver.getText(key) 封装了对 resolver 合约 text(node, key) 的调用
+    console.log(`Reading text record [${recordKey}] for ${ensName}...`);
+    const value = await resolver.getText(recordKey);
+
+    if (value) {
+      console.log(`Successfully retrieved value:`);
+      console.log(value);
+
+      // 4. (可选) 如果存储的是 JSON，尝试解析
+      try {
+        const parsedValue = JSON.parse(value);
+        console.log("\nParsed JSON value:");
+        console.log(parsedValue);
+        // 现在你可以使用 parsedValue.methods 等
+        if (parsedValue.methods && Array.isArray(parsedValue.methods)) {
+            console.log(`\nFound ${parsedValue.methods.length} API methods.`);
+        }
+      } catch (parseError) {
+        console.warn("\nCould not parse the retrieved value as JSON:", parseError.message);
+      }
+    } else {
+      console.log(`No text record found for key "${recordKey}" on ${ensName}.`);
+    }
+
+  } catch (error) {
+    console.error("Error reading text record:", error);
+  }
+}
+
+getTextRecord();
+
+```
+
+**方法 2: 使用 ENS Subgraph (推荐用于频繁读取或复杂查询)**
+
+ENS 官方维护了一个 Subgraph，它索引了 ENS 数据，允许通过 GraphQL 进行高效查询，而无需直接与以太坊节点交互（对于读取操作）。
+
+1.  **Subgraph Endpoint:** `https://api.thegraph.com/subgraphs/name/ensdomains/ens`
+2.  **查询工具/库:** 可以使用 `Workspace` API、`axios`、或者专门的 GraphQL 客户端库如 `graphql-request`, `apollo-client`。
+
+```javascript
+import { request, gql } from 'graphql-request'; // npm install graphql-request graphql
+
+// --- 配置 ---
+const subgraphUrl = 'https://api.thegraph.com/subgraphs/name/ensdomains/ens';
+const ensName = 'myapi.eth'; // 注意：Subgraph 查询通常需要 namehash 或 labelhash，或者直接用 name
+const recordKey = 'api.methods.v1.json';
+
+// --- GraphQL 查询 ---
+// 这个查询获取域名的 resolver，然后查找特定的 text record key
+// 注意：Subgraph schema 可能随时间变化，需要参考最新文档或 Introspection
+const query = gql`
+  query GetTextRecord($name: String!, $key: String!) {
+    domains(where: { name: $name }) {
+      id
+      name
+      resolver {
+        texts(where: { key: $key }) {
+          key
+          value
+        }
+      }
+    }
+  }
+`;
+
+// --- 执行查询 ---
+async function getTextRecordViaSubgraph() {
+  console.log(`Querying ENS Subgraph for ${ensName} [${recordKey}]...`);
+  try {
+    const variables = { name: ensName, key: recordKey };
+    const response = await request(subgraphUrl, query, variables);
+
+    if (response.domains && response.domains.length > 0) {
+      const domain = response.domains[0];
+      if (domain.resolver && domain.resolver.texts && domain.resolver.texts.length > 0) {
+        const record = domain.resolver.texts[0];
+        console.log(`Successfully retrieved value via Subgraph:`);
+        console.log(record.value);
+
+        // (可选) 解析 JSON
+        try {
+          const parsedValue = JSON.parse(record.value);
+          console.log("\nParsed JSON value:");
+          console.log(parsedValue);
+        } catch (parseError) {
+          console.warn("\nCould not parse the retrieved value as JSON:", parseError.message);
+        }
+      } else {
+        console.log(`No text record found for key "${recordKey}" on resolver for ${ensName}.`);
+      }
+    } else {
+      console.log(`Domain ${ensName} not found in the ENS Subgraph.`);
+    }
+  } catch (error) {
+    console.error('Error querying ENS Subgraph:', error);
+  }
+}
+
+getTextRecordViaSubgraph();
+```
+
+**注意事项 (读取):**
+
+* **效率:** 对于单次读取，Ethers.js Provider 方法足够简单。对于需要读取多个记录、或在前端应用中频繁读取，Subgraph 通常更高效，因为它避免了直接的 RPC 调用。
+* **Subgraph 同步延迟:** Subgraph 的数据相对于链上状态可能有几分钟的延迟。对于需要绝对实时数据的场景，直接 Provider 调用更可靠。
+* **JSON 解析:** 存储为 JSON 字符串的数据在读取后需要手动 `JSON.parse()`。
+
+**总结**
+
+使用 ENS Text Records 存储 API Method List 是一个很好的去中心化实践。
+* **写入/更新:** 使用 `ethers.js`，通过拥有控制权的 `Signer` 调用与 ENS 名称关联的 `Resolver` 合约的 `setText(node, key, value)` 方法。注意权限、Gas 和数据大小。
+* **读取:**
+    * 使用 `ethers.js` 的 `provider.getResolver(name)` 获取 `Resolver` 实例，然后调用 `resolver.getText(key)`。简单直接。
+    * 使用 **ENS Subgraph** 通过 GraphQL 查询，对于读取密集型应用更高效。
+
+根据你的具体需求（写入频率、读取频率、实时性要求、数据大小）选择合适的方法。
+
+对于text record设置，将resolver部署在某个layer2，记录不同链的不同二级域名设置，类似api.arb.aaa.eth, api.op.aaa.eth, 希望通过k v写入这个节点（对应了二三级域名api.arb.aaa.eth）对外提供的api method和调用地址；这些技术准备也请提供帮助；另外ens除了text record之外，其他的设置项也请解释；另外记得二级三级域名可以授权给独立的钱包地址管理？还是以NFT的方式可以转移？，请根据上述改进方案
+Okay, let's enhance the plan to incorporate L2 resolvers, multi-chain subdomain management, storing API invocation details, explain other record types, and clarify subdomain ownership/transfer.
+
+**1. L2 Resolvers and CCIP-Read**
+
+Using an L2 resolver is a great way to save gas costs for record updates, as setting records happens on the cheaper L2. Reading records can also be efficient.
+
+* **Concept:** Instead of storing records directly on an L1 resolver, you configure your L1 ENS name (`aaa.eth`) to point to a special "Gateway" or "Off-chain Resolver" contract on L1. This gateway knows how to redirect queries to your *actual* resolver contract deployed on an L2 (e.g., Arbitrum).
+* **Mechanism (CCIP-Read - EIP-3668):**
+    1.  A user or application tries to resolve a record for `api.arb.aaa.eth` on L1.
+    2.  It queries the L1 Gateway resolver set for `aaa.eth`.
+    3.  The L1 Gateway doesn't return the record directly. Instead, it returns:
+        * The URL of an RPC endpoint for the target L2 (e.g., Arbitrum's RPC URL).
+        * Calldata that needs to be sent to the L2 resolver contract.
+    4.  The client library (like ethers.js v6+) automatically detects this CCIP-Read response.
+    5.  The client makes an `eth_call` (read-only) request to the specified L2 RPC URL, sending the provided calldata to the L2 resolver contract address.
+    6.  The L2 resolver contract executes the request (e.g., fetches the text record) and returns the result.
+    7.  The client receives the result from the L2 and returns it to the application as if it came directly from L1.
+* **Benefits:**
+    * **Lower Gas for Updates:** Setting/updating records (`setText`, `setAddr`, etc.) only requires an L2 transaction.
+    * **Faster Updates:** L2 transactions confirm much faster than L1.
+* **Technical Preparations:**
+    * **Deploy Resolver on L2:** Deploy an instance of a compatible resolver contract (e.g., the standard `PublicResolver`) onto your chosen L2 (Arbitrum, Optimism, Base, etc.). Note its address on the L2.
+    * **Set L1 Resolver to Gateway:** On L1, the owner of `aaa.eth` needs to set its resolver address to a CCIP-Read enabled Gateway contract. ENS provides official gateway contracts, or you might use others. This gateway needs to be configured with the L2 chain ID and the L2 resolver address deployed above. Check the official ENS documentation for the latest recommended gateway contracts and setup procedures.
+    * **L2 RPC Endpoint:** Ensure clients/users have access to a reliable RPC endpoint for the L2 where the resolver resides.
+    * **Client Library Support:** Use libraries like ethers.js (v6+) that automatically handle the CCIP-Read workflow.
+
+**2. Multi-Chain Subdomains and Storing API Info**
+
+Using subdomains like `api.arb.aaa.eth` and `api.op.aaa.eth` is a standard and effective ENS pattern.
+
+* **Structure:**
+    * `aaa.eth`: Your main domain, registered on L1. Its resolver points to the L1 CCIP-Read Gateway.
+    * `arb.aaa.eth`: Subdomain controlled by an address (can be the same or different from `aaa.eth` owner).
+    * `op.aaa.eth`: Another subdomain.
+    * `api.arb.aaa.eth`: Sub-subdomain controlled by the owner of `arb.aaa.eth`.
+    * `api.op.aaa.eth`: Sub-subdomain controlled by the owner of `op.aaa.eth`.
+* **Resolver Strategy:** You can point *all* these subdomains (or their parents like `arb.aaa.eth`) to the *same* L2 resolver (e.g., the one deployed on Arbitrum) via the L1 gateway configuration. The L2 resolver contract can store records for many different nodes (namehashes).
+* **Storing API Method List and Invocation Address:**
+    * Use **Text Records** on the specific sub-subdomain (e.g., `api.arb.aaa.eth`).
+    * **Key for Methods:** `api.methods.v1.json` (Value: JSON string listing methods, parameters, descriptions).
+    * **Key for Invocation Address (Contract on Arbitrum):**
+        * `api.contract.address` (Value: `0xYourArbContractAddress`)
+        * `api.contract.chainid` (Value: `42161` for Arbitrum One)
+        * `api.contract.abi.url` (Optional Value: IPFS/Arweave link to the ABI JSON, or store ABI directly using the ABI record type if feasible)
+    * **Key for Invocation Address (HTTP Endpoint):**
+        * `api.endpoint.http` (Value: `https://your-api-service.com/arb-endpoint`)
+        * `api.endpoint.type` (Value: `REST` or `GraphQL` etc.)
+    * **Combining:** You could also combine some info into the JSON value of `api.methods.v1.json` if preferred, but separate keys offer more query flexibility.
+
+**3. Setting Text Records on L2 Resolver**
+
+To set the records for `api.arb.aaa.eth`, you interact *directly* with the resolver contract deployed on the L2 (Arbitrum in this example).
+
+```javascript
+import { ethers } from "ethers";
+
+// --- L2 Configuration ---
+const l2ProviderUrl = "https://arb1.arbitrum.io/rpc"; // Example: Arbitrum One RPC
+// Private key of the wallet controlling 'api.arb.aaa.eth' (or its parent 'arb.aaa.eth' if control wasn't further delegated)
+const l2ControllerPrivateKey = "YOUR_L2_CONTROLLER_PRIVATE_KEY";
+// The address of the resolver contract YOU deployed on the L2
+const l2ResolverAddress = "0xYourDeployedL2ResolverAddressOnArbitrum";
+// The specific subdomain you are setting records for
+const fullSubdomain = "api.arb.aaa.eth";
+const recordKey = "api.contract.address"; // Example: Setting contract address
+const recordValue = "0xYourArbContractAddress"; // The actual contract address
+
+// --- L2 Connection and Setting ---
+
+async function setL2TextRecord() {
+  // 1. Connect L2 Provider
+  const l2Provider = new ethers.JsonRpcProvider(l2ProviderUrl);
+
+  // 2. Create L2 Signer (Needs ARB ETH for gas)
+  const l2Wallet = new ethers.Wallet(l2ControllerPrivateKey, l2Provider);
+  console.log(`Using L2 wallet address: ${l2Wallet.address}`);
+
+  // 3. Instantiate L2 Resolver Contract with Signer
+  // We need the ABI. Get it from the standard PublicResolver or your deployed contract source.
+  // A minimal ABI for setText:
+  const resolverAbi = [
+    "function setText(bytes32 node, string calldata key, string calldata value) external"
+  ];
+  const l2ResolverContract = new ethers.Contract(l2ResolverAddress, resolverAbi, l2Wallet);
+
+  console.log(`Setting L2 text record for ${fullSubdomain}:`);
+  console.log(`  Resolver: ${l2ResolverAddress} on L2`);
+  console.log(`  Key: ${recordKey}`);
+  console.log(`  Value: ${recordValue}`);
+
+  try {
+    // 4. Calculate the node (namehash) for the full subdomain
+    const node = ethers.namehash(fullSubdomain);
+
+    // 5. Call setText directly on the L2 Resolver contract
+    const tx = await l2ResolverContract.setText(node, recordKey, recordValue);
+
+    console.log(`L2 Transaction sent: ${tx.hash}`);
+    console.log("Waiting for L2 transaction confirmation...");
+
+    // 6. Wait for confirmation
+    const receipt = await tx.wait();
+
+    if (receipt.status === 1) {
+      console.log("L2 Transaction successful!");
+      console.log(`L2 Text record set for ${fullSubdomain} [${recordKey}]`);
+    } else {
+      console.error("L2 Transaction failed!");
+      console.error("Receipt:", receipt);
+    }
+
+  } catch (error) {
+    console.error("Error setting L2 text record:", error);
+    // Check L2 wallet balance (for gas), permissions, contract address/ABI
+  }
+}
+
+setL2TextRecord();
+```
+
+**4. Reading Text Records (via L2 Resolver)**
+
+Thanks to CCIP-Read support in libraries like ethers.js v6+, reading records resolved via L2 often looks *identical* to reading from L1 from the developer's perspective.
+
+```javascript
+import { ethers } from "ethers";
+
+// --- L1 Configuration (Yes, L1!) ---
+// Even though the record is on L2, resolution STARTS at L1
+const l1ProviderUrl = "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID";
+// We also need the L2 provider URL for ethers.js to perform the CCIP-Read call
+const l2ProviderUrl = "https://arb1.arbitrum.io/rpc"; // Match the L2 used
+
+const fullSubdomain = "api.arb.aaa.eth";
+const recordKey = "api.contract.address"; // Key we set on L2
+
+// --- Reading with CCIP-Read Handling ---
+
+async function getL2TextRecord() {
+  // 1. Connect L1 Provider
+  // Ethers needs BOTH L1 and L2 providers accessible if default RPC URLs aren't configured globally
+  // Often, just providing the L1 provider might be enough if ethers can deduce the L2 endpoint from the gateway response
+  // Or configure providers more explicitly if needed.
+  const l1Provider = new ethers.JsonRpcProvider(l1ProviderUrl);
+  // const l2Provider = new ethers.JsonRpcProvider(l2ProviderUrl); // Might be needed depending on ethers config/version
+
+  console.log(`Resolving ${fullSubdomain} via L1 provider (expecting CCIP-Read)...`);
+
+  try {
+    // 2. Get Resolver for the subdomain (starting from L1)
+    // Ethers will query L1, find the gateway, follow CCIP-Read to L2
+    const resolver = await l1Provider.getResolver(fullSubdomain);
+
+    if (!resolver) {
+      console.log(`Resolver not found for ${fullSubdomain}.`);
+      return;
+    }
+    // Note: resolver.address might be the L1 Gateway address here,
+    // but ethers knows how to use it correctly via CCIP-Read.
+    console.log(`Got resolver instance (potentially L1 Gateway: ${resolver.address})`);
+
+    // 3. Call getText - Ethers handles the L1->L2 redirection
+    console.log(`Reading text record [${recordKey}] for ${fullSubdomain}...`);
+    const value = await resolver.getText(recordKey); // Magic happens here!
+
+    if (value) {
+      console.log(`Successfully retrieved value (from L2): ${value}`);
+    } else {
+      console.log(`No text record found for key "${recordKey}" on ${fullSubdomain}.`);
+    }
+
+  } catch (error) {
+    console.error("Error reading text record (check L1/L2 providers, ENS setup, CCIP-Read support):", error);
+    if (error.message.includes("FETCH_ERROR") || error.message.includes("OFFCHAIN_LOOKUP")) {
+        console.error("This might indicate an issue with the CCIP-Read gateway, L2 RPC URL, or network connectivity.");
+    }
+  }
+}
+
+getL2TextRecord();
+```
+
+**5. Other ENS Record Types Explained**
+
+Besides `setText`, ENS resolvers commonly support:
+
+* **`setAddr(bytes32 node, address addr)` / `addr(bytes32 node)`:** Sets/gets the default Ethereum address for a name. Used for sending ETH/tokens directly to the name.
+* **`setAddr(bytes32 node, uint coinType, bytes memory addr)` / `addr(bytes32 node, uint coinType)`:** Sets/gets addresses for other cryptocurrencies defined by SLIP-44 coin types (e.g., 0 for BTC, 2 for LTC).
+* **`setContenthash(bytes32 node, bytes memory hash)` / `contenthash(bytes32 node)`:** Sets/gets a hash pointing to distributed content (e.g., `ipfs://Qm...`, `arweave://...`). Used for hosting decentralized websites or linking large metadata files.
+* **`setABI(bytes32 node, uint contentType, bytes memory data)` / `ABI(bytes32 node, uint contentTypes)`:** Sets/gets the Application Binary Interface (ABI) for a contract associated with the name. Allows tools to interact with the contract by name. `contentType=1` is typically JSON ABI.
+* **`setName(bytes32 node, string memory name)` / `name(bytes32 node)`:** Reverse resolution: maps an address back to its primary ENS name (if set).
+* **`setPubkey(bytes32 node, bytes32 x, bytes32 y)` / `pubkey(bytes32 node)`:** Stores a public key (rarely used now).
+
+**6. Subdomain Ownership, Delegation, and Transfer**
+
+* **Creation & Initial Control:** The owner of a parent domain (e.g., `aaa.eth` on L1) creates a subdomain (e.g., `arb.aaa.eth`) by calling `setSubnodeOwner` on the L1 ENS **Registry** contract. They specify the `owner` address for the new subdomain. This `owner` address then fully controls the subdomain node.
+* **Delegation:** Yes, the owner of `aaa.eth` can set the `owner` of `arb.aaa.eth` to be a **completely different wallet address**. This effectively delegates control of that specific subdomain. The new owner can then set resolvers, records, and create further subdomains (like `api.arb.aaa.eth`).
+* **NFT Relationship:**
+    * **.eth Second-Level Domains (like `aaa.eth`)** are typically ERC-721 NFTs managed by the **ENS Name Wrapper** contract on L1. Transferring the `aaa.eth` NFT transfers ownership and control of the `aaa.eth` node, *including the right to manage subdomains like `arb.aaa.eth` UNLESS control of that subdomain has been explicitly assigned to a different owner using `setSubnodeOwner`*.
+    * **Subdomains (like `arb.aaa.eth` or `api.arb.aaa.eth`) are NOT automatically NFTs.** Their control is tied to the Ethereum address designated as their owner in the ENS Registry.
+    * **Wrapping Subdomains (Advanced):** It *is possible* to wrap subdomains using the ENS Name Wrapper, which *can* turn them into transferable tokens (often ERC-1155s associated with the parent NFT). This requires specific permissions ("fuses") to be set on the parent domain and is not the default behaviour. If wrapped, transferring the resulting token transfers control.
+* **Transferring Subdomain Control:**
+    1.  **If Not Wrapped:** The *current owner* address of the subdomain (e.g., the owner of `arb.aaa.eth`) can call `setOwner` on the ENS Registry contract (on L1) for the subdomain's node, changing control to a new address.
+    2.  **If Wrapped:** Transfer the specific ERC-1155 (or potentially ERC-721) token representing the wrapped subdomain.
+
+**Summary of Technical Preparations for Your Goal:**
+
+1.  Own or control an ENS name on L1 (e.g., `aaa.eth`).
+2.  Choose an L2 (e.g., Arbitrum).
+3.  Deploy a Public Resolver contract (or similar) to your chosen L2. Note its L2 address.
+4.  On L1, set the resolver for `aaa.eth` to point to a CCIP-Read Gateway contract, configured with your L2's chain ID and the L2 Resolver address from step 3. (Requires an L1 transaction by the `aaa.eth` owner).
+5.  Decide who controls the subdomains (e.g., `arb.aaa.eth`, `op.aaa.eth`, `api.arb.aaa.eth`). If different from the `aaa.eth` owner, use `setSubnodeOwner` on the L1 Registry to delegate control to the appropriate L2 wallet addresses. (Requires L1 transactions).
+6.  Ensure the controller wallets for the subdomains have funds on the L2 (e.g., ARB ETH) for gas.
+7.  Use the L2 controller wallet/signer and the L2 Resolver address to `setText` (and other records) directly on the L2 for the respective subdomains (`api.arb.aaa.eth`, etc.).
+8.  Use an L1 provider (and potentially L2 provider for CCIP-Read) with ethers.js v6+ to read records transparently. Alternatively, query an ENS subgraph if available for the L2 or mainnet (for L1 gateway info).
+
+This setup provides a powerful, flexible, and gas-efficient way to manage decentralized metadata like your API lists across different conceptual environments represented by subdomains.
