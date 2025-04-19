@@ -680,7 +680,7 @@ console.log(service); // "payment"
 若需完整跨链支持，建议等待 ENS V2 或集成跨链协议。当前方案已满足 Optimism 上的需求，跨链部分可手动扩展。有进一步问题欢迎追问！
 
 ### 简单行动方案（再问2.5pro）
-
+a
 对于ens的domain设置，请提供官方最新api的使用指导，来完成text record的设置和读取，从而完成一个去中心的api method list的存储和更新
 
 好的，下面是使用当前（截至 2025 年初）官方推荐的库（主要是 ethers.js）与 ENS 交互，设置和读取 Text Records 的指导，以实现去中心化的 API Method List 存储和更新。
